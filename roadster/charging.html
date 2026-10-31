@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>충전 계산기 | Roadster 팬 페이지</title>
+  <meta name="description" content="보도된 충전 수치를 바탕으로 충전 시간을 단순 계산해요.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="index.html" aria-label="홈으로">ROADSTER<span>FAN</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="nav" aria-label="주요 메뉴">
+      <a href="highlights.html">특징</a>
+      <a href="specs.html">사양</a>
+      <a href="charging.html" aria-current="page">충전 계산기</a>
+      <a href="timeline.html">연혁</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section page-section" id="charging" aria-labelledby="chTitle">
+      <div class="container narrow">
+        <p class="eyebrow reveal">TOOL</p>
+        <h1 id="chTitle" class="reveal">충전 시간 계산기</h1>
+        <p class="sub reveal">“15%→85%가 약 10분”이라는 발언을 기준으로 단순 계산해 봤어요. 실제 충전 속도는 배터리 상태와 충전 구간에 따라 달라집니다.</p>
+
+        <div class="calc reveal">
+          <div class="bar" aria-hidden="true">
+            <div class="bar-fill" id="barFill"></div>
+          </div>
+          <div class="sliders">
+            <label for="fromRange">시작 <output id="fromOut">15</output>%</label>
+            <input type="range" id="fromRange" min="0" max="95" value="15">
+            <label for="toRange">목표 <output id="toOut">85</output>%</label>
+            <input type="range" id="toRange" min="5" max="100" value="85">
+          </div>
+          <div class="result" aria-live="polite">
+            <span class="result-label">예상 충전 시간</span>
+            <strong id="timeOut">약 10분</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>비공식 팬 페이지</strong> · 상표와 제품명은 각 소유자에게 있어요. 이 사이트는 어떤 기업과도 제휴, 후원 관계가 아닙니다.</p>
+    <p class="small">정보 기준: 2026년 10월 · 언론 보도 종합 · 자동차 그림은 가상 일러스트 · 연습용 프로젝트</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

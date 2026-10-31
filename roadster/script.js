@@ -33,22 +33,14 @@
     if (e.key === 'Escape') setMenu(false);
   });
 
-  /* ---------- 현재 섹션 메뉴 강조 ---------- */
+  /* ---------- 현재 페이지 메뉴 강조 ---------- */
+  // 각 HTML에 aria-current="page"가 들어 있지만, 빠진 경우를 대비해 주소로 한 번 더 맞춘다.
+  var current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
-  var sections = links
-    .map(function (a) { return doc.querySelector(a.getAttribute('href')); })
-    .filter(Boolean);
-
-  if ('IntersectionObserver' in window) {
-    var spy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        links.forEach(function (a) {
-          a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
-        });
-      });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    sections.forEach(function (s) { spy.observe(s); });
+  if (!nav.querySelector('[aria-current="page"]')) {
+    links.forEach(function (a) {
+      if (a.getAttribute('href').toLowerCase() === current) a.setAttribute('aria-current', 'page');
+    });
   }
 
   /* ---------- 스크롤 등장 효과 ---------- */
@@ -142,9 +134,12 @@
     timeOut.textContent = text;
   }
 
-  fromRange.addEventListener('input', function () { updateCalc('from'); });
-  toRange.addEventListener('input', function () { updateCalc('to'); });
-  updateCalc();
+  // 계산기는 charging.html에만 있으므로 있을 때만 연결한다
+  if (fromRange && toRange) {
+    fromRange.addEventListener('input', function () { updateCalc('from'); });
+    toRange.addEventListener('input', function () { updateCalc('to'); });
+    updateCalc();
+  }
 
   /* ---------- FAQ: 하나만 열리게 ---------- */
   var details = doc.querySelectorAll('.faq details');

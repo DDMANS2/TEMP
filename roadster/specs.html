@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>사양 | Roadster 팬 페이지</title>
+  <meta name="description" content="보도된 로드스터 사양을 숫자와 표로 정리했어요.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="index.html" aria-label="홈으로">ROADSTER<span>FAN</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="nav" aria-label="주요 메뉴">
+      <a href="highlights.html">특징</a>
+      <a href="specs.html" aria-current="page">사양</a>
+      <a href="charging.html">충전 계산기</a>
+      <a href="timeline.html">연혁</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section page-section" id="specs" aria-labelledby="spTitle">
+      <div class="container">
+        <p class="eyebrow reveal">SPECS</p>
+        <h1 id="spTitle" class="reveal">숫자로 보는 로드스터</h1>
+        <div class="stats">
+          <div class="stat reveal">
+            <div class="num"><span class="count" data-target="1073">0</span><em>+</em></div>
+            <div class="unit">마력 (hp) · 기본형</div>
+          </div>
+          <div class="stat reveal">
+            <div class="num"><span class="count" data-target="500" data-prefix="약 ">0</span></div>
+            <div class="unit">km · 일반 주행 항속거리(추정)</div>
+          </div>
+          <div class="stat reveal">
+            <div class="num"><span class="count" data-target="10" data-prefix="약 ">0</span></div>
+            <div class="unit">분 · 15→85% 충전(주장)</div>
+          </div>
+          <div class="stat reveal">
+            <div class="num"><span class="count" data-target="2028" data-plain="true">0</span></div>
+            <div class="unit">년 · 양산 시작 목표(발언)</div>
+          </div>
+        </div>
+
+        <div class="table-wrap reveal">
+          <table>
+            <caption class="sr-only">로드스터 보도 사양 표</caption>
+            <thead>
+              <tr><th scope="col">항목</th><th scope="col">내용</th><th scope="col">구분</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">출력</th><td>1,073hp 이상(기본) / 1,341hp 이상(상위)</td><td><span class="tag claim">주장</span></td></tr>
+              <tr><th scope="row">토크</th><td>약 885 lb-ft(기본) / 1,032 lb-ft 이상(상위)</td><td><span class="tag claim">주장</span></td></tr>
+              <tr><th scope="row">구동 방식</th><td>후륜구동, 듀얼 모터, 토크 벡터링</td><td><span class="tag report">보도</span></td></tr>
+              <tr><th scope="row">항속거리</th><td>약 310~320마일(약 500~515km)</td><td><span class="tag est">추정</span></td></tr>
+              <tr><th scope="row">충전</th><td>최대 500kW 입력, 15→85% 약 10분</td><td><span class="tag claim">주장</span></td></tr>
+              <tr><th scope="row">공차중량</th><td>약 1,700kg(가장 가벼운 사양)</td><td><span class="tag report">보도</span></td></tr>
+              <tr><th scope="row">좌석</th><td>2인승</td><td><span class="tag report">보도</span></td></tr>
+              <tr><th scope="row">가격·배터리 용량</th><td>공개되지 않음</td><td><span class="tag none">미공개</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note reveal">※ 위 수치는 언론 보도와 임원 발언을 정리한 것으로, 공식 확정 사양이 아니에요. 출처마다 내용이 다를 수 있고 이후 바뀔 수 있습니다.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>비공식 팬 페이지</strong> · 상표와 제품명은 각 소유자에게 있어요. 이 사이트는 어떤 기업과도 제휴, 후원 관계가 아닙니다.</p>
+    <p class="small">정보 기준: 2026년 10월 · 언론 보도 종합 · 자동차 그림은 가상 일러스트 · 연습용 프로젝트</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

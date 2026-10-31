@@ -10,16 +10,16 @@
 <body>
 
   <header class="site-header" id="top">
-    <a class="brand" href="#top" aria-label="맨 위로">ROADSTER<span>FAN</span></a>
+    <a class="brand" href="index.html" aria-label="홈으로">ROADSTER<span>FAN</span></a>
     <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="메뉴 열기">
       <span></span><span></span><span></span>
     </button>
     <nav class="nav" id="nav" aria-label="주요 메뉴">
-      <a href="#highlights">특징</a>
-      <a href="#specs">사양</a>
-      <a href="#charging">충전 계산기</a>
-      <a href="#timeline">연혁</a>
-      <a href="#faq">FAQ</a>
+      <a href="highlights.html">특징</a>
+      <a href="specs.html">사양</a>
+      <a href="charging.html">충전 계산기</a>
+      <a href="timeline.html">연혁</a>
+      <a href="faq.html">FAQ</a>
     </nav>
   </header>
 
@@ -41,166 +41,49 @@
         </figure>
         <p class="lead">전기 스포츠카의 한계를 다시 묻다.<br>공개된 보도 내용을 한 페이지로 정리했어요.</p>
         <div class="cta">
-          <a class="btn primary" href="#specs">사양 보기</a>
-          <a class="btn ghost" href="#charging">충전 시간 계산</a>
+          <a class="btn primary" href="specs.html">사양 보기</a>
+          <a class="btn ghost" href="charging.html">충전 시간 계산</a>
         </div>
       </div>
-      <a class="scroll-hint" href="#highlights" aria-label="아래로 스크롤">SCROLL</a>
+      <a class="scroll-hint" href="#explore" aria-label="둘러보기로 이동">SCROLL</a>
     </section>
 
-    <!-- HIGHLIGHTS -->
-    <section class="section" id="highlights" aria-labelledby="hlTitle">
+    <!-- EXPLORE -->
+    <section class="section" id="explore" aria-labelledby="exTitle">
       <div class="container">
-        <p class="eyebrow reveal">HIGHLIGHTS</p>
-        <h2 id="hlTitle" class="reveal">핵심 특징</h2>
-        <div class="cards">
-          <article class="card reveal">
+        <p class="eyebrow reveal">EXPLORE</p>
+        <h2 id="exTitle" class="reveal">둘러보기</h2>
+        <div class="cards cards-5">
+          <a class="card link-card reveal" href="highlights.html">
             <div class="icon" aria-hidden="true">⚡</div>
-            <h3>압도적인 출력</h3>
-            <p>기본형이 1,073마력 이상, 상위형은 1,341마력 이상이라고 보도됐어요. 두 수치 모두 제조사 측 주장입니다.</p>
-          </article>
-          <article class="card reveal">
-            <div class="icon" aria-hidden="true">🛣️</div>
-            <h3>후륜구동 · 듀얼 모터</h3>
-            <p>뒷바퀴만 굴리는 구성에 두 개의 전기 모터와 토크 벡터링이 적용된다고 알려졌어요.</p>
-          </article>
-          <article class="card reveal">
-            <div class="icon" aria-hidden="true">🪶</div>
-            <h3>가벼운 차체</h3>
-            <p>알루미늄과 탄소섬유 구조를 쓰고, 가장 가벼운 사양은 약 1,700kg 수준으로 전해졌어요.</p>
-          </article>
-          <article class="card reveal">
+            <h3>특징</h3>
+            <p>출력, 구동 방식, 차체, 충전까지 핵심만 모았어요.</p>
+            <span class="go" aria-hidden="true">자세히 보기 →</span>
+          </a>
+          <a class="card link-card reveal" href="specs.html">
+            <div class="icon" aria-hidden="true">📊</div>
+            <h3>사양</h3>
+            <p>보도된 수치를 숫자와 표로 정리했어요.</p>
+            <span class="go" aria-hidden="true">자세히 보기 →</span>
+          </a>
+          <a class="card link-card reveal" href="charging.html">
             <div class="icon" aria-hidden="true">🔋</div>
-            <h3>초고속 충전</h3>
-            <p>최대 500kW 입력, 15%에서 85%까지 약 10분이라는 임원 발언이 보도됐어요.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- SPECS -->
-    <section class="section dark" id="specs" aria-labelledby="spTitle">
-      <div class="container">
-        <p class="eyebrow reveal">SPECS</p>
-        <h2 id="spTitle" class="reveal">숫자로 보는 로드스터</h2>
-        <div class="stats">
-          <div class="stat reveal">
-            <div class="num"><span class="count" data-target="1073">0</span><em>+</em></div>
-            <div class="unit">마력 (hp) · 기본형</div>
-          </div>
-          <div class="stat reveal">
-            <div class="num"><span class="count" data-target="500" data-prefix="약 ">0</span></div>
-            <div class="unit">km · 일반 주행 항속거리(추정)</div>
-          </div>
-          <div class="stat reveal">
-            <div class="num"><span class="count" data-target="10" data-prefix="약 ">0</span></div>
-            <div class="unit">분 · 15→85% 충전(주장)</div>
-          </div>
-          <div class="stat reveal">
-            <div class="num"><span class="count" data-target="2028" data-plain="true">0</span></div>
-            <div class="unit">년 · 양산 시작 목표(발언)</div>
-          </div>
-        </div>
-
-        <div class="table-wrap reveal">
-          <table>
-            <caption class="sr-only">로드스터 보도 사양 표</caption>
-            <thead>
-              <tr><th scope="col">항목</th><th scope="col">내용</th><th scope="col">구분</th></tr>
-            </thead>
-            <tbody>
-              <tr><th scope="row">출력</th><td>1,073hp 이상(기본) / 1,341hp 이상(상위)</td><td><span class="tag claim">주장</span></td></tr>
-              <tr><th scope="row">토크</th><td>약 885 lb-ft(기본) / 1,032 lb-ft 이상(상위)</td><td><span class="tag claim">주장</span></td></tr>
-              <tr><th scope="row">구동 방식</th><td>후륜구동, 듀얼 모터, 토크 벡터링</td><td><span class="tag report">보도</span></td></tr>
-              <tr><th scope="row">항속거리</th><td>약 310~320마일(약 500~515km)</td><td><span class="tag est">추정</span></td></tr>
-              <tr><th scope="row">충전</th><td>최대 500kW 입력, 15→85% 약 10분</td><td><span class="tag claim">주장</span></td></tr>
-              <tr><th scope="row">공차중량</th><td>약 1,700kg(가장 가벼운 사양)</td><td><span class="tag report">보도</span></td></tr>
-              <tr><th scope="row">좌석</th><td>2인승</td><td><span class="tag report">보도</span></td></tr>
-              <tr><th scope="row">가격·배터리 용량</th><td>공개되지 않음</td><td><span class="tag none">미공개</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="note reveal">※ 위 수치는 언론 보도와 임원 발언을 정리한 것으로, 공식 확정 사양이 아니에요. 출처마다 내용이 다를 수 있고 이후 바뀔 수 있습니다.</p>
-      </div>
-    </section>
-
-    <!-- CHARGING CALCULATOR -->
-    <section class="section" id="charging" aria-labelledby="chTitle">
-      <div class="container narrow">
-        <p class="eyebrow reveal">TOOL</p>
-        <h2 id="chTitle" class="reveal">충전 시간 계산기</h2>
-        <p class="sub reveal">“15%→85%가 약 10분”이라는 발언을 기준으로 단순 계산해 봤어요. 실제 충전 속도는 배터리 상태와 충전 구간에 따라 달라집니다.</p>
-
-        <div class="calc reveal">
-          <div class="bar" aria-hidden="true">
-            <div class="bar-fill" id="barFill"></div>
-          </div>
-          <div class="sliders">
-            <label for="fromRange">시작 <output id="fromOut">15</output>%</label>
-            <input type="range" id="fromRange" min="0" max="95" value="15">
-            <label for="toRange">목표 <output id="toOut">85</output>%</label>
-            <input type="range" id="toRange" min="5" max="100" value="85">
-          </div>
-          <div class="result" aria-live="polite">
-            <span class="result-label">예상 충전 시간</span>
-            <strong id="timeOut">약 10분</strong>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TIMELINE -->
-    <section class="section dark" id="timeline" aria-labelledby="tlTitle">
-      <div class="container narrow">
-        <p class="eyebrow reveal">HISTORY</p>
-        <h2 id="tlTitle" class="reveal">로드스터 연혁</h2>
-        <ol class="timeline">
-          <li class="reveal">
-            <time>2017</time>
-            <h3>차세대 모델 최초 공개</h3>
-            <p>당시 발표에서는 항속거리 약 620마일 등 훨씬 높은 목표가 제시됐어요.</p>
-          </li>
-          <li class="reveal">
-            <time>2018 ~ 2025</time>
-            <h3>공개 일정 반복 연기</h3>
-            <p>양산형 공개 시점이 여러 차례 미뤄졌다고 보도됐어요.</p>
-          </li>
-          <li class="reveal">
-            <time>2026</time>
-            <h3>양산형 공개 행사</h3>
-            <p>가을에 공개 행사가 열렸지만 구체적인 사양과 가격은 대부분 발표되지 않았다고 전해졌어요.</p>
-          </li>
-          <li class="reveal">
-            <time>2028</time>
-            <h3>양산 시작 목표</h3>
-            <p>임원들이 텍사스에서 생산을 시작하겠다고 밝혔다고 보도됐어요.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section" id="faq" aria-labelledby="fqTitle">
-      <div class="container narrow">
-        <p class="eyebrow reveal">FAQ</p>
-        <h2 id="fqTitle" class="reveal">자주 묻는 질문</h2>
-        <div class="faq">
-          <details class="reveal">
-            <summary>이 사이트는 공식 사이트인가요?</summary>
-            <p>아니요. 개인이 만든 비공식 팬 페이지이고, 어떤 자동차 회사와도 관련이 없어요. 로고와 공식 사진은 사용하지 않았고, 첫 화면의 자동차 그림은 실제 차량이 아닌 가상 일러스트예요.</p>
-          </details>
-          <details class="reveal">
-            <summary>사양은 믿어도 되나요?</summary>
-            <p>언론 보도와 임원 발언을 정리한 참고용 수치예요. 구매나 투자 판단에는 반드시 제조사의 공식 발표를 확인하세요.</p>
-          </details>
-          <details class="reveal">
-            <summary>가격은 얼마인가요?</summary>
-            <p>이 페이지를 만든 시점에는 공개된 가격 정보를 확인하지 못했어요.</p>
-          </details>
-          <details class="reveal">
-            <summary>언제 살 수 있나요?</summary>
-            <p>양산은 2028년 시작이 목표라고 보도됐지만, 일정은 이전에도 여러 번 바뀌었어요.</p>
-          </details>
+            <h3>충전 계산기</h3>
+            <p>충전 구간을 골라 예상 시간을 계산해 보세요.</p>
+            <span class="go" aria-hidden="true">자세히 보기 →</span>
+          </a>
+          <a class="card link-card reveal" href="timeline.html">
+            <div class="icon" aria-hidden="true">🗓️</div>
+            <h3>연혁</h3>
+            <p>최초 공개부터 양산 목표까지 흐름을 봐요.</p>
+            <span class="go" aria-hidden="true">자세히 보기 →</span>
+          </a>
+          <a class="card link-card reveal" href="faq.html">
+            <div class="icon" aria-hidden="true">💬</div>
+            <h3>FAQ</h3>
+            <p>사이트와 사양에 대해 자주 묻는 질문이에요.</p>
+            <span class="go" aria-hidden="true">자세히 보기 →</span>
+          </a>
         </div>
       </div>
     </section>
