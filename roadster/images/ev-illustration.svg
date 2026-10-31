@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 150 1200 270" role="img" aria-labelledby="t">
+  <title id="t">가상의 전기 스포츠카 일러스트 (실제 차량 아님)</title>
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b6272"/>
+      <stop offset=".35" stop-color="#2a2f3a"/>
+      <stop offset="1" stop-color="#0d0f14"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b4458"/>
+      <stop offset="1" stop-color="#090b10"/>
+    </linearGradient>
+    <radialGradient id="rim" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#c9ced8"/>
+      <stop offset=".7" stop-color="#6b7280"/>
+      <stop offset="1" stop-color="#2b2f38"/>
+    </radialGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ff4a3d" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#ff4a3d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="trail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff6a4d" stop-opacity="0"/>
+      <stop offset="1" stop-color="#ff6a4d" stop-opacity=".9"/>
+    </linearGradient>
+    <style>
+      .wheel { transform-box: fill-box; transform-origin: center; animation: spin .7s linear infinite; }
+      .car { animation: bob 2.4s ease-in-out infinite; }
+      .trail { animation: dash 1.2s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+      @keyframes dash { from { transform: translateX(40px); opacity: 0; } 40% { opacity: 1; } to { transform: translateX(-160px); opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .wheel, .car, .trail { animation: none; } }
+    </style>
+  </defs>
+
+  <!-- 바닥 빛 -->
+  <ellipse cx="600" cy="392" rx="540" ry="30" fill="url(#glow)"/>
+  <ellipse cx="600" cy="390" rx="480" ry="9" fill="#000" opacity=".7"/>
+
+  <!-- 속도선 -->
+  <g stroke="url(#trail)" stroke-width="3" stroke-linecap="round">
+    <line class="trail" x1="20" y1="230" x2="150" y2="230"/>
+    <line class="trail" x1="0" y1="270" x2="110" y2="270" style="animation-delay:.3s"/>
+    <line class="trail" x1="40" y1="310" x2="160" y2="310" style="animation-delay:.6s"/>
+    <line class="trail" x1="10" y1="190" x2="90" y2="190" style="animation-delay:.9s"/>
+  </g>
+
+  <g class="car">
+    <!-- 차체 -->
+    <path fill="url(#body)" stroke="#7a8293" stroke-width="1.5" d="
+      M150 330
+      L146 282
+      Q148 246 198 236
+      L440 210
+      Q530 172 620 170
+      Q712 172 790 210
+      L1010 230
+      Q1076 242 1086 280
+      L1080 330
+      L948 330
+      A78 78 0 0 0 792 330
+      L398 330
+      A78 78 0 0 0 242 330
+      Z"/>
+
+    <!-- 위쪽 반사광 -->
+    <path fill="none" stroke="url(#shine)" stroke-width="3" d="M220 242 L442 218 Q530 180 620 178 Q708 180 784 216 L1000 238"/>
+
+    <!-- 유리 -->
+    <path fill="url(#glass)" stroke="#5c6475" stroke-width="1.2" d="M470 210 Q540 184 620 183 Q698 184 760 208 Z"/>
+    <line x1="624" y1="184" x2="614" y2="210" stroke="#1a1e27" stroke-width="5"/>
+
+    <!-- 옆선 -->
+    <path fill="none" stroke="#0a0c11" stroke-width="2" d="M190 268 Q600 250 1060 262"/>
+    <path fill="none" stroke="#ff6a4d" stroke-width="2" opacity=".7" d="M420 300 L770 300"/>
+
+    <!-- 문 손잡이 / 문선 -->
+    <path fill="none" stroke="#0a0c11" stroke-width="1.6" d="M478 214 L460 300 M762 212 L778 300"/>
+    <rect x="690" y="244" width="42" height="5" rx="2.5" fill="#9aa3b2" opacity=".7"/>
+
+    <!-- 앞등 (가는 선) -->
+    <path fill="none" stroke="#e8f3ff" stroke-width="4" stroke-linecap="round" d="M1030 248 L1074 262"/>
+    <ellipse cx="1060" cy="258" rx="40" ry="10" fill="#bfe1ff" opacity=".18"/>
+    <!-- 뒷등 -->
+    <path fill="none" stroke="#ff3b2f" stroke-width="5" stroke-linecap="round" d="M150 256 L176 248"/>
+    <ellipse cx="160" cy="254" rx="30" ry="9" fill="#ff3b2f" opacity=".25"/>
+
+    <!-- 뒷바퀴 -->
+    <g>
+      <circle cx="320" cy="330" r="62" fill="#07080b"/>
+      <circle cx="320" cy="330" r="44" fill="url(#rim)"/>
+      <g class="wheel" stroke="#2b2f38" stroke-width="7" stroke-linecap="round">
+        <line x1="320" y1="292" x2="320" y2="368"/>
+        <line x1="287" y1="311" x2="353" y2="349"/>
+        <line x1="287" y1="349" x2="353" y2="311"/>
+      </g>
+      <circle cx="320" cy="330" r="10" fill="#ff4a3d"/>
+    </g>
+    <!-- 앞바퀴 -->
+    <g>
+      <circle cx="870" cy="330" r="62" fill="#07080b"/>
+      <circle cx="870" cy="330" r="44" fill="url(#rim)"/>
+      <g class="wheel" stroke="#2b2f38" stroke-width="7" stroke-linecap="round">
+        <line x1="870" y1="292" x2="870" y2="368"/>
+        <line x1="837" y1="311" x2="903" y2="349"/>
+        <line x1="837" y1="349" x2="903" y2="311"/>
+      </g>
+      <circle cx="870" cy="330" r="10" fill="#ff4a3d"/>
+    </g>
+  </g>
+</svg>
