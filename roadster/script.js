@@ -141,6 +141,26 @@
     updateCalc();
   }
 
+  /* ---------- 공식 영상: 누를 때만 불러오기 ---------- */
+  var videoPlay = doc.getElementById('videoPlay');
+  if (videoPlay) {
+    videoPlay.addEventListener('click', function () {
+      var id = videoPlay.dataset.videoId;
+      // PC에서 파일로 바로 연 경우(file://)에는 유튜브 퍼가기가 막히므로 유튜브로 연다
+      if (location.protocol === 'file:') {
+        window.open('https://www.youtube.com/watch?v=' + id, '_blank', 'noopener');
+        return;
+      }
+      var iframe = doc.createElement('iframe');
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+      iframe.title = 'Tesla 공식 영상: Roadster Event';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      videoPlay.replaceWith(iframe);
+    });
+  }
+
   /* ---------- FAQ: 하나만 열리게 ---------- */
   var details = doc.querySelectorAll('.faq details');
   details.forEach(function (d) {

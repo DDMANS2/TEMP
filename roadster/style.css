@@ -180,8 +180,7 @@ ol { list-style: none; }
     var(--bg);
 }
 
-/* 페이지 전환 효과: 지원 브라우저는 부드럽게 넘어가고, 아니면 살짝 나타남 */
-@view-transition { navigation: auto; }
+/* 페이지 전환 효과: 새 페이지 내용이 살짝 떠오르며 나타남 */
 main { animation: pageIn .45s ease both; }
 @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
@@ -200,6 +199,36 @@ main { animation: pageIn .45s ease both; }
 .link-card p { flex: 1; }
 .link-card .go { margin-top: 18px; font-size: 14px; font-weight: 700; color: var(--accent-2); transition: transform .2s; }
 .link-card:hover .go { transform: translateX(4px); }
+
+/* ===== Official video ===== */
+.video {
+  position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--line); background: #000;
+}
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-play {
+  position: absolute; inset: 0; width: 100%; border: 0; cursor: pointer; color: var(--text);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  background:
+    radial-gradient(600px 300px at 50% 60%, rgba(229, 50, 45, .28), transparent 70%),
+    repeating-linear-gradient(90deg, transparent 0 59px, rgba(255,255,255,.035) 59px 60px),
+    linear-gradient(#0b0d12, #050608);
+  font: inherit;
+}
+.play-icon {
+  width: 84px; height: 84px; border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 0 10px rgba(229, 50, 45, .18), 0 12px 40px var(--glow);
+  position: relative; transition: transform .2s;
+}
+.play-icon::after {
+  content: ""; position: absolute; left: 34px; top: 26px;
+  border-style: solid; border-width: 16px 0 16px 26px; border-color: transparent transparent transparent #fff;
+}
+.video-play:hover .play-icon, .video-play:focus-visible .play-icon { transform: scale(1.08); }
+.video-meta { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.video-meta strong { font-size: 20px; }
+.video-meta span { color: var(--muted); font-size: 14px; }
+.video-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
 
 /* ===== Stats & Table ===== */
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-bottom: 48px; }
