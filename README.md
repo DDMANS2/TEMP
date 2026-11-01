@@ -97,8 +97,9 @@
 | 주소 | 방식 | 하는 일 |
 |---|---|---|
 | `/api/posts` | GET | 글 목록 (`?category=free` 로 분류 필터) |
-| `/api/posts` | POST | 글쓰기 `{category, title, content}` — **로그인한 회원만**(아니면 401). 작성자는 로그인한 닉네임으로 자동 기록, 공지는 불가 |
-| `/api/posts/번호` | GET | 글 보기 (조회수 +1) |
+| `/api/posts` | POST | 글쓰기 `{category, title, content, files?}` — 사진 최대 3장·1MB·png/jpg/gif/webp, **로그인한 회원만**(아니면 401). 작성자는 로그인한 닉네임으로 자동 기록, 공지는 불가 |
+| `/api/posts/번호` | GET | 글 보기 (조회수 +1) + 첨부 사진 목록 |
+| `/api/files/번호` | GET | 첨부 사진 보기 |
 | `/api/signup` | POST | 회원가입 `{nickname, email, password, gender, zipcode, address1, address2, agree}` |
 | `/api/login` | POST | 로그인 `{email, password}` — 성공하면 로그인 쿠키(7일) 발급 |
 | `/api/me` | GET | 지금 로그인한 회원 확인 |

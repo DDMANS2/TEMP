@@ -101,6 +101,7 @@
       var title = el('td', 'col-title');
       var a = el('a', null, p.title); a.href = '#post-' + p.id; title.appendChild(a);
       if (isNew(p.created_at)) { title.appendChild(t(' ')); var n = el('span', 'new', 'N'); n.setAttribute('aria-label', '새 글'); title.appendChild(n); }
+      if (p.files > 0) { var clip = el('span', 'clip', '📎'); clip.setAttribute('aria-label', '사진 ' + p.files + '장'); title.appendChild(t(' ')); title.appendChild(clip); }
       tr.appendChild(no); tr.appendChild(cat); tr.appendChild(title);
       tr.appendChild(el('td', 'col-author', p.author));
       tr.appendChild(el('td', 'col-date', mmdd(p.created_at)));
@@ -144,6 +145,15 @@
           var meta = el('p', 'post-meta');
           meta.appendChild(el('span', null, p.author)); meta.appendChild(el('span', null, full(p.created_at))); meta.appendChild(el('span', null, '조회 ' + p.views));
           head.appendChild(meta); view.appendChild(head); view.appendChild(body(p.content));
+          if (d.files && d.files.length) {
+            var box = el('div', 'post-files');
+            d.files.forEach(function (f) {
+              var fig = el('figure'), img = el('img'); img.src = '/api/files/' + f.id; img.alt = f.name; img.loading = 'lazy';
+              var cap = el('figcaption', null, f.name + ' · ' + Math.max(1, Math.round(f.size / 1024)) + 'KB · '), dl = el('a', null, '원본 보기'); dl.href = '/api/files/' + f.id; dl.target = '_blank'; dl.rel = 'noopener';
+              cap.appendChild(dl); fig.appendChild(img); fig.appendChild(cap); box.appendChild(fig);
+            });
+            view.appendChild(box);
+          }
         }
         view.hidden = false;
         page.classList.add('live-view');
@@ -214,10 +224,49 @@
     });
   })();
 
+  /* ---- 사진 첨부 (서버가 있고 로그인했을 때만 보여요) ---- */
+  var picked = []; /* {file, url} */
+  var MAX_FILES = 3, MAX_BYTES = 1024 * 1024;
+  function renderPicked(msg) {
+    var ul = document.getElementById('w-file-list'); if (!ul) return;
+    ul.textContent = '';
+    picked.forEach(function (p, i) {
+      var li = el('li'), im = el('img'); im.src = p.url; im.alt = '';
+      li.appendChild(im); li.appendChild(el('span', 'nm', p.file.name)); li.appendChild(el('span', 'sz', Math.max(1, Math.round(p.file.size / 1024)) + 'KB'));
+      var rm = el('button', null, '삭제'); rm.type = 'button'; rm.addEventListener('click', function () { URL.revokeObjectURL(p.url); picked.splice(i, 1); renderPicked(); });
+      li.appendChild(rm); ul.appendChild(li);
+    });
+    if (msg) ul.appendChild(el('li', null, msg));
+  }
+  (function initFiles() {
+    var box = document.getElementById('w-files-box'), input = document.getElementById('w-files');
+    if (!box || !input) return;
+    Promise.all([ready, me]).then(function (r) { if (r[0] && r[1]) box.hidden = false; });
+    input.addEventListener('change', function () {
+      var msg = '';
+      Array.prototype.forEach.call(input.files, function (f) {
+        if (picked.length >= MAX_FILES) { msg = '사진은 최대 ' + MAX_FILES + '장까지 올릴 수 있어요.'; return; }
+        if (!/^image\/(png|jpeg|gif|webp)$/.test(f.type)) { msg = f.name + ': 사진(png, jpg, gif, webp)만 올릴 수 있어요.'; return; }
+        if (f.size > MAX_BYTES) { msg = f.name + ': 한 장은 1MB 이하만 올릴 수 있어요.'; return; }
+        picked.push({ file: f, url: URL.createObjectURL(f) });
+      });
+      input.value = '';
+      renderPicked(msg);
+    });
+  })();
+  function toBase64(file) {
+    return new Promise(function (ok, no) {
+      var r = new FileReader();
+      r.onload = function () { ok(String(r.result).split(',')[1] || ''); };
+      r.onerror = no; r.readAsDataURL(file);
+    });
+  }
+
   wire('.write-form[action^="write.html"]',
     [t('쓴 글은 '), b('게시판에 바로 올라가요.'), t(' 작성자는 로그인한 닉네임으로 표시돼요. 다른 방문자도 볼 수 있으니 개인정보는 적지 말아 주세요.')],
     function (say) {
-      return call('POST', '/api/posts', { category: v('w-cat'), title: v('w-title'), content: v('w-body') })
+      return Promise.all(picked.map(function (p) { return toBase64(p.file).then(function (data) { return { name: p.file.name, data: data }; }); }))
+        .then(function (files) { return call('POST', '/api/posts', { category: v('w-cat'), title: v('w-title'), content: v('w-body'), files: files }); })
         .then(function (d) {
           if (d.ok) { say('등록했어요!', 'ok'); location.href = 'board.html#post-' + d.id; }
           else if (d.status === 401) say('로그인이 풀렸어요. 다시 로그인해 주세요.', 'error');

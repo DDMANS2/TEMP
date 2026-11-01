@@ -56,3 +56,24 @@ CREATE TABLE IF NOT EXISTS sessions (
   created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now', '+9 hours')),
   expires_at  TEXT    NOT NULL                                              -- 만료 시각 (로그인 후 7일)
 );
+
+
+-- ===== 게시글 첨부 사진 =====
+-- 서버(functions/_lib/files.js)가 처음 쓸 때 같은 정의로 자동 생성하기도 해요.
+-- 사진은 1MB 이하·최대 3장, 내용은 base64 글자 조각으로 나눠 저장해요. 글을 지우면 사진도 함께 지워져요.
+CREATE TABLE IF NOT EXISTS attachments (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  post_id     INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  name        TEXT    NOT NULL,                       -- 원래 파일 이름
+  mime        TEXT    NOT NULL,                       -- 파일 내용으로 판별한 종류 (png/jpeg/gif/webp)
+  size        INTEGER NOT NULL,                       -- 바이트
+  created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now', '+9 hours'))
+);
+CREATE INDEX IF NOT EXISTS idx_attachments_post ON attachments (post_id);
+
+CREATE TABLE IF NOT EXISTS attachment_chunks (
+  attachment_id INTEGER NOT NULL REFERENCES attachments(id) ON DELETE CASCADE,
+  seq           INTEGER NOT NULL,                     -- 조각 순서 (0부터)
+  data          TEXT    NOT NULL,                     -- base64 조각
+  PRIMARY KEY (attachment_id, seq)
+);

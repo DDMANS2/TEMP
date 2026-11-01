@@ -1,14 +1,16 @@
 // GET  /api/posts?category=free   글 목록 (공지가 맨 위, 그다음 최신순)
-// POST /api/posts                 글쓰기 {category, title, content} — 로그인한 회원만 (작성자는 로그인한 닉네임으로 자동 기록)
+// POST /api/posts                 글쓰기 {category, title, content, files?[{name,data(base64)}]} (사진 최대 3장·1MB) — 로그인한 회원만 (작성자는 로그인한 닉네임으로 자동 기록)
 import { json, fail, readJson, str } from "../../_lib/util.js";
 import { currentUser } from "../../_lib/session.js";
+import { ensureFiles, parseFiles, saveFiles } from "../../_lib/files.js";
 
 const CATEGORIES = ["notice", "free", "qna", "info"];
 const WRITABLE = ["free", "qna", "info"]; // 공지는 운영자만 (화면에서도 공지는 선택 불가)
 
 export async function onRequestGet({ request, env }) {
   const category = new URL(request.url).searchParams.get("category");
-  let sql = "SELECT id, category, title, author, views, created_at FROM posts";
+  await ensureFiles(env);
+  let sql = "SELECT id, category, title, author, views, created_at, (SELECT COUNT(*) FROM attachments a WHERE a.post_id = posts.id) AS files FROM posts";
   const args = [];
   if (category) {
     if (!CATEGORIES.includes(category)) return fail(400, "알 수 없는 분류예요.");
@@ -30,7 +32,13 @@ export async function onRequestPost({ request, env }) {
   if (!WRITABLE.includes(category)) return fail(400, "분류를 확인해 주세요.");
   if (title.length < 1 || title.length > 60) return fail(400, "제목은 1~60자예요.");
   if (content.length < 5) return fail(400, "내용은 5자 이상 써 주세요.");
+  const pf = parseFiles(b.files);
+  if (pf.error) return fail(400, pf.error);
+  await ensureFiles(env);
   const r = await env.DB.prepare("INSERT INTO posts (category, title, author, content) VALUES (?, ?, ?, ?)")
     .bind(category, title, author, content).run();
-  return json({ ok: true, id: r.meta.last_row_id }, 201);
+  const id = r.meta.last_row_id;
+  try { await saveFiles(env, id, pf.files); }
+  catch { await env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id).run(); return fail(500, "사진을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."); }
+  return json({ ok: true, id }, 201);
 }

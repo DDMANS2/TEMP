@@ -36,8 +36,9 @@ TEMP/
 ├─ api.js                        ← 게시판·글쓰기·가입·로그인을 /api 와 연결 (서버 없으면 아무것도 안 함)
 ├─ functions/
 │  ├─ _lib/session.js            ← 로그인 세션(쿠키 토큰, DB엔 해시만). `sessions` 표는 처음 쓸 때 자동 생성
+│  ├─ _lib/files.js              ← 첨부 사진(이미지만, 3장·1MB). D1에 base64 조각으로 저장, 종류는 파일 내용으로 판별. 표는 처음 쓸 때 자동 생성
 │  ├─ _lib/util.js               ← JSON 응답, 입력 읽기, PBKDF2 비밀번호 해시
-│  └─ api/  posts/index.js  posts/[id].js  signup.js  login.js  me.js  logout.js
+│  └─ api/  posts/index.js  posts/[id].js  files/[id].js  signup.js  login.js  me.js  logout.js
 ├─ wrangler.toml                 ← Pages 설정 + D1 바인딩(DB). 이 파일이 설정의 기준
 ├─ db/  schema.sql  seed.sql     ← 테이블 정의, 예시 글 5개 (board.db 파일은 .gitignore)
 └─ images/
@@ -48,8 +49,9 @@ TEMP/
 | 주소 | 방식 | 하는 일 |
 |---|---|---|
 | `/api/posts` | GET | 목록 (`?category=free\|qna\|info\|notice`), 공지가 맨 위 |
-| `/api/posts` | POST | 글쓰기 `{category, title, content}` — **로그인 필수(401)**, 작성자=세션 닉네임(보낸 author는 무시), `notice`는 거부 |
-| `/api/posts/번호` | GET | 글 보기 (조회수 +1) |
+| `/api/posts` | POST | 글쓰기 `{category, title, content, files?[{name,data(base64)}]}` — 사진 ≤3장·각 ≤1MB, **로그인 필수(401)**, 작성자=세션 닉네임(보낸 author는 무시), `notice`는 거부 |
+| `/api/posts/번호` | GET | 글 보기 (조회수 +1) + `files:[{id,name,mime,size}]` |
+| `/api/files/번호` | GET | 첨부 이미지 (nosniff·CSP sandbox, 1일 캐시) |
 | `/api/signup` | POST | 가입 `{nickname, email, password, gender, zipcode, address1, address2?, agree}` |
 | `/api/login` | POST | 이메일·비밀번호 확인 + `last_login_at` 기록 + **세션 쿠키 `sid`**(HttpOnly·Secure·SameSite=Lax, 7일) |
 | `/api/me` | GET | 로그인한 회원 `{user:{nickname}\|null}` |
@@ -62,8 +64,9 @@ TEMP/
 ## 5. DB 스키마 요약
 
 - `posts`: `id, category(notice|free|qna|info), title(1~60), author(2~12), content(5자+), views, created_at(KST, 자동), updated_at`
+- `attachments`(글 번호 FK, name, mime, size) / `attachment_chunks`(base64 조각 60,000자씩): 글 삭제 시 CASCADE. D1은 한 번에 넣는 크기에 한계가 있어 조각으로 나눠 저장.
 - `users`: `id, nickname(2~12, 유일·대소문자 무시), email(유일·대소문자 무시), password_hash(20자+), gender(female|male|none), zipcode(숫자5), address1, address2, agreed_at, created_at, last_login_at`
-- 현재 D1 상태: `posts` 5개(예시 글), `users` 0명.
+- 현재 D1 상태: `posts` 5개(예시 글), `users` 0명, 첨부 없음.
 - 정의는 `db/schema.sql`이 기준이에요. D1은 `.db` 파일을 그대로 올릴 수 없어서 **SQL 파일로** 적용해요.
   - D1에 적용할 때는 `PRAGMA` 줄을 뺀 사본을 써요: `grep -v '^PRAGMA' db/schema.sql > /tmp/s.sql`
   - 스키마를 바꿀 땐 `ALTER`/새 마이그레이션 SQL을 만들어 원격 D1에 적용하고, `schema.sql`도 함께 고쳐요.
@@ -120,6 +123,8 @@ curl -s localhost:8790/api/posts
 7. **`api.js`로 화면 연결**: 게시판 목록·글 보기(조회수), 글쓰기, 가입, 로그인. 서버가 없으면 기존 연습용 화면으로 폴백.
 8. 배포 후 실서비스에서 글쓰기·가입·로그인을 한 번씩 시험하고 **시험 데이터는 삭제**함.
 9. **로그인 세션 + 글쓰기 로그인 제한**: 쿠키 세션(`sid`), `/api/me`·`/api/logout`, 글쓰기는 로그인한 회원만(작성자는 세션 닉네임). 헤더에 닉네임·로그아웃 표시. 서버 없는 GitHub Pages에서는 예전 연습용 화면 그대로. 실서비스에서 가입·로그인까지 한 시험은 하지 않음(시험 데이터 삭제에 토큰 필요).
+10. **글쓰기 버튼 잠금**: 로그인 전엔 🔒 표시(회색), 누르면 로그인 화면.
+11. **사진 첨부**(이미지만, D1 저장, 최대 3장·1MB): 글쓰기에서 선택·미리보기·삭제, 글 보기에서 사진 표시, 목록에 📎. 실서비스에서 업로드까지 한 시험은 하지 않음(시험 데이터 삭제용 토큰이 없음).
 
 ## 10. 아직 안 된 것 / 다음 후보 (사용자가 요청할 때만)
 
