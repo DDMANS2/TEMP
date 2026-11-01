@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>로그인 | Roadster 팬 페이지</title>
+  <meta name="description" content="로드스터 팬 페이지 로그인 화면이에요. HTML과 CSS만으로 만든 연습용 화면입니다.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="index.html" aria-label="홈으로">ROADSTER<span>FAN</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="nav" aria-label="주요 메뉴">
+      <a href="highlights.html">특징</a>
+      <a href="specs.html">사양</a>
+      <a href="charging.html">충전 계산기</a>
+      <a href="timeline.html">연혁</a>
+      <a href="faq.html">FAQ</a>
+      <a href="board.html">게시판</a>
+      <a href="login.html" aria-current="page">로그인</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section page-section" aria-labelledby="lgTitle">
+      <div class="container narrow auth">
+
+        <!-- 로그인 버튼을 누르면 주소가 #done 으로 바뀌고 이 안내가 보여요 (CSS :target) -->
+        <div class="write-done" id="done" role="status">
+          <p class="eyebrow">NOTICE</p>
+          <h2>연습용이라 실제로 로그인되지 않았어요</h2>
+          <p>이 사이트는 HTML과 CSS만으로 만들어서 회원 정보를 확인할 서버가 없어요. 입력한 내용은 어디에도 전송되거나 저장되지 않았어요.</p>
+          <div class="cta">
+            <a class="btn primary" href="index.html">홈으로</a>
+            <a class="btn ghost" href="login.html">다시 써보기</a>
+          </div>
+        </div>
+
+        <p class="eyebrow">LOGIN</p>
+        <h1 id="lgTitle">로그인</h1>
+        <p class="board-notice">연습용 화면이에요. 빈칸·형식 확인까지는 동작하지만, <strong>실제 로그인은 되지 않아요.</strong></p>
+
+        <!-- name 속성을 넣지 않아서, 입력한 이메일·비밀번호가 주소창에 남지 않아요 -->
+        <form class="write-form" action="login.html#done" method="get">
+          <div class="field">
+            <label for="l-email">이메일</label>
+            <input id="l-email" type="email" placeholder="example@email.com" required autocomplete="username">
+          </div>
+          <div class="field">
+            <label for="l-pw">비밀번호</label>
+            <input id="l-pw" type="password" minlength="8" placeholder="8자 이상" required autocomplete="current-password">
+          </div>
+          <div class="field check">
+            <input id="l-keep" type="checkbox">
+            <label for="l-keep">로그인 상태 유지</label>
+          </div>
+          <div class="form-actions">
+            <button class="btn primary" type="submit">로그인</button>
+          </div>
+        </form>
+
+        <p class="auth-switch">아직 회원이 아니신가요? <a href="signup.html">회원가입</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>비공식 팬 페이지</strong> · 상표와 제품명은 각 소유자에게 있어요. 이 사이트는 어떤 기업과도 제휴, 후원 관계가 아닙니다.</p>
+    <p class="small">정보 기준: 2026년 10월 · 언론 보도 종합 · 자동차 그림은 가상 일러스트 · 공식 영상은 Tesla 유튜브 퍼가기 · 연습용 프로젝트</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

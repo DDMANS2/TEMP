@@ -444,7 +444,7 @@ input[type="range"]::-moz-range-thumb {
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .field { display: grid; gap: 8px; }
 .field label { font-size: 14px; font-weight: 700; }
-.field input[type="text"], .field select, .field textarea {
+.field input[type="text"], .field input[type="email"], .field input[type="password"], .field select, .field textarea, .addr input {
   width: 100%; font: inherit; font-size: 15px; color: var(--text); background: #0a0c11;
   border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; transition: border-color .2s, box-shadow .2s;
 }
@@ -452,7 +452,7 @@ input[type="range"]::-moz-range-thumb {
 .field input::placeholder, .field textarea::placeholder { color: #5b6373; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(229, 50, 45, .2); }
 /* 한 번 입력했다가 조건에 안 맞으면 빨간 테두리 (CSS :user-invalid) */
-.field input:user-invalid, .field textarea:user-invalid, .field select:user-invalid { border-color: #ff6a4d; }
+.field input:user-invalid, .field textarea:user-invalid, .field select:user-invalid, .addr input:user-invalid { border-color: #ff6a4d; }
 .field.check { grid-template-columns: auto 1fr; align-items: center; gap: 10px; }
 .field.check input { width: 18px; height: 18px; accent-color: var(--accent); }
 .field.check label { font-weight: 400; color: var(--muted); }
@@ -469,8 +469,19 @@ button.btn.primary { border: 0; color: #fff; }
 main:has(.write-done:target) .write-form,
 main:has(.write-done:target) .write-done ~ .board-notice { display: none; }
 
+/* 회원가입·로그인 */
+.auth { max-width: 560px; }
+fieldset.addr { border: 0; padding: 0; margin: 0; min-width: 0; gap: 10px; }
+.addr legend { font-size: 14px; font-weight: 700; padding: 0; margin-bottom: 8px; }
+.zip-row { grid-template-columns: 180px 1fr; gap: 10px; }
+.addr .zip-row + input { margin-top: 0; }
+.auth-switch { margin-top: 20px; text-align: center; color: var(--muted); font-size: 14px; }
+.auth-switch a { color: var(--text); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.auth-switch a:hover { color: var(--accent); }
+main:has(.write-done:target) .auth-switch { display: none; }
+
 @media (max-width: 760px) {
-  .nav.open { max-height: 380px; }
+  .nav.open { max-height: 440px; }
 }
 @media (max-width: 640px) {
   .board-table thead { display: none; }
@@ -488,6 +499,7 @@ main:has(.write-done:target) .write-done ~ .board-notice { display: none; }
   .board-table .col-date::before { content: "· "; }
   .field-row { grid-template-columns: 1fr; }
   .write-form { padding: 20px 16px; }
+  .zip-row { grid-template-columns: 1fr; }
 }
 .cards-6 { grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 900px) { .cards-6 { grid-template-columns: repeat(2, 1fr); } }
