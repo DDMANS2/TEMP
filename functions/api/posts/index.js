@@ -21,7 +21,7 @@ export async function onRequestGet({ request, env }) {
 
 export async function onRequestPost({ request, env }) {
   const b = await readJson(request);
-  if (!b) return fail(400, "JSON 형식으로 보내 주세요.");
+  if (!b) return fail(400, "요청 형식이 올바르지 않아요.");
   const category = str(b.category), author = str(b.author), title = str(b.title), content = str(b.content);
   if (!WRITABLE.includes(category)) return fail(400, "분류를 확인해 주세요.");
   if (author.length < 2 || author.length > 12) return fail(400, "닉네임은 2~12자예요.");

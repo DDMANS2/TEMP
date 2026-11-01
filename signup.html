@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>회원가입 | Roadster 팬 페이지</title>
-  <meta name="description" content="로드스터 팬 페이지 회원가입 화면이에요. HTML과 CSS만으로 만든 연습용 화면입니다.">
+  <meta name="description" content="로드스터 팬 페이지 회원가입 화면이에요.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -70,7 +70,7 @@
           <div class="field">
             <label for="s-pw">비밀번호</label>
             <input id="s-pw" type="password" minlength="8" placeholder="8자 이상" required autocomplete="new-password">
-            <p class="hint">로그인할 때 필요해서 넣었어요.</p>
+            <p class="hint">로그인할 때 쓰는 비밀번호예요.</p>
           </div>
 
           <fieldset class="field addr">
@@ -84,8 +84,9 @@
 
           <div class="field check">
             <input id="s-agree" type="checkbox" required>
-            <label for="s-agree">이용 안내와 개인정보 수집·이용에 동의해요 (필수)</label>
+            <label for="s-agree">개인정보 수집·이용에 동의해요 (필수)</label>
           </div>
+          <p class="hint">수집 항목: 닉네임, 이메일, 성별, 집 주소, 비밀번호(암호화해서 보관) · 이용 목적: 회원 확인 · 연습용 사이트라 데이터는 예고 없이 삭제될 수 있어요.</p>
 
           <p class="form-msg" role="status" aria-live="polite" hidden></p>
 

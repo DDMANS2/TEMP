@@ -5,7 +5,7 @@ const GENDER = { 여성: "female", 남성: "male", "선택 안 함": "none", fem
 
 export async function onRequestPost({ request, env }) {
   const b = await readJson(request);
-  if (!b) return fail(400, "JSON 형식으로 보내 주세요.");
+  if (!b) return fail(400, "요청 형식이 올바르지 않아요.");
   const nickname = str(b.nickname), email = str(b.email), password = typeof b.password === "string" ? b.password : "";
   const gender = GENDER[str(b.gender)], zipcode = str(b.zipcode), address1 = str(b.address1), address2 = str(b.address2) || null;
 
@@ -26,6 +26,6 @@ export async function onRequestPost({ request, env }) {
     const m = String(e.message || e);
     if (m.includes("users.nickname")) return fail(409, "이미 사용 중인 닉네임이에요.");
     if (m.includes("users.email")) return fail(409, "이미 가입된 이메일이에요.");
-    return fail(500, "가입 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요.");
+    return fail(500, "가입하지 못했어요. 잠시 후 다시 시도해 주세요.");
   }
 }

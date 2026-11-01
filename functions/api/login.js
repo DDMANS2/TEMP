@@ -4,7 +4,7 @@ import { json, fail, readJson, str, verifyPassword } from "../_lib/util.js";
 
 export async function onRequestPost({ request, env }) {
   const b = await readJson(request);
-  if (!b) return fail(400, "JSON 형식으로 보내 주세요.");
+  if (!b) return fail(400, "요청 형식이 올바르지 않아요.");
   const email = str(b.email), password = typeof b.password === "string" ? b.password : "";
   if (!email || !password) return fail(400, "이메일과 비밀번호를 입력해 주세요.");
 
