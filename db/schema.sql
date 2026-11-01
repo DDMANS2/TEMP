@@ -77,3 +77,12 @@ CREATE TABLE IF NOT EXISTS attachment_chunks (
   data          TEXT    NOT NULL,                     -- base64 조각
   PRIMARY KEY (attachment_id, seq)
 );
+
+
+-- ===== 요청 횟수 제한 (로그인·가입 방어) =====
+-- 서버(functions/_lib/ratelimit.js)가 처음 쓸 때 같은 정의로 자동 생성하기도 해요. 키는 해시값이라 IP·이메일 원문은 저장하지 않아요.
+CREATE TABLE IF NOT EXISTS rate_limits (
+  key       TEXT    PRIMARY KEY,      -- 예: login-ip:해시, login-fail:해시, signup-ip:해시
+  count     INTEGER NOT NULL,         -- 시간창 안에서 센 횟수
+  reset_at  INTEGER NOT NULL          -- 시간창이 끝나는 시각 (초 단위 UNIX 시간)
+);

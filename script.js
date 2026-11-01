@@ -4,6 +4,20 @@
   var doc = document;
   doc.documentElement.classList.add('js');
 
+  /* 주소창에 #done 을 직접 붙여 들어온 경우(폼을 제출한 적 없음)에는 안내 화면 대신 입력 화면을 보여요.
+     연습용 화면에서 실제로 제출해서 넘어온 경우는 같은 페이지에서 왔으므로(referrer) 그대로 안내를 보여줘요. */
+  if (location.hash === '#done') {
+    var from = doc.referrer ? doc.referrer.split('#')[0].replace(/[?].*$/, '') : '';
+    var here = location.href.split('#')[0].replace(/[?].*$/, '');
+    if (from !== here) doc.documentElement.classList.add('fresh');
+  }
+  /* 같은 화면에서 주소창으로 #done 만 바꿔 들어온 경우도 직접 접근으로 봐요 (실제 제출은 새로 불러오기라 해당 없음) */
+  var submitted = false; /* 이 화면에서 폼을 제출했는지 (제출 후 #done 으로 넘어가는 것은 정상) */
+  doc.addEventListener('submit', function () { submitted = true; }, true);
+  window.addEventListener('hashchange', function () {
+    doc.documentElement.classList.toggle('fresh', location.hash === '#done' && !submitted);
+  });
+
   var reduceMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

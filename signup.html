@@ -49,7 +49,7 @@
           <div class="field-row">
             <div class="field">
               <label for="s-nick">닉네임</label>
-              <input id="s-nick" type="text" minlength="2" maxlength="12" placeholder="2~12자" required autocomplete="nickname">
+              <input id="s-nick" type="text" minlength="2" maxlength="12" pattern="[가-힣a-zA-Z0-9_\-]{2,12}" title="한글·영문·숫자와 _ - 만 쓸 수 있어요 (2~12자)" placeholder="2~12자 (한글·영문·숫자)" required autocomplete="nickname">
             </div>
             <div class="field">
               <label for="s-gender">성별</label>

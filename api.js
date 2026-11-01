@@ -28,8 +28,10 @@
 
   /* 로그인 후 돌아갈 곳 (같은 사이트의 정해진 화면만 허용) */
   var nextPage = function () {
-    var m = /[?&]next=([a-z]+\.html)\b/.exec(location.search);
-    return m && ['write.html', 'board.html'].indexOf(m[1]) > -1 ? m[1] : 'board.html';
+    /* write · write.html · WRITE.HTML 모두 허용 (정해진 화면만 이동) */
+    var m = /[?&]next=([A-Za-z]+)(?:\.html)?(?:&|#|$)/i.exec(location.search);
+    var target = m ? m[1].toLowerCase() + '.html' : '';
+    return ['write.html', 'board.html'].indexOf(target) > -1 ? target : 'board.html';
   };
 
   /* ---------- 헤더: 로그인 ↔ 닉네임·로그아웃 / 글쓰기 버튼 ---------- */
@@ -155,15 +157,33 @@
             view.appendChild(box);
           }
         }
+        me.then(function (u) { /* 로그인하지 않은 방문자에게 로그인 안내 */
+          if (u || !view || view.querySelector('.post-guest-cta')) return;
+          var cta = el('div', 'post-guest-cta');
+          cta.appendChild(el('p', null, '게시판 글쓰기는 회원만 할 수 있어요.'));
+          var row = el('div', 'cta');
+          var a1 = el('a', 'btn primary', '로그인하기'); a1.href = 'login.html?next=write.html';
+          var a2 = el('a', 'btn ghost', '회원가입'); a2.href = 'signup.html';
+          row.appendChild(a1); row.appendChild(a2); cta.appendChild(row); view.appendChild(cta);
+        });
         view.hidden = false;
         page.classList.add('live-view');
         window.scrollTo(0, 0);
       });
     }
 
+    function flash(msg) { /* 목록 위에 잠깐 안내 */
+      var old = $('.board-flash'); if (old) old.remove();
+      if (!msg) return;
+      var p = el('p', 'form-msg error board-flash', msg); p.setAttribute('role', 'alert');
+      var tgt = $('.board-notice'); if (tgt) tgt.parentNode.insertBefore(p, tgt.nextSibling);
+    }
     function route() {
       var m = /^#post-(\d+)$/.exec(location.hash);
-      return m ? showPost(m[1]) : showList();
+      if (m) { flash(''); return showPost(m[1]); }
+      var bad = /^#post-/.test(location.hash); /* #post-abc 처럼 숫자가 아닌 글 번호 */
+      if (bad && history.replaceState) history.replaceState(null, '', location.pathname + location.search); /* 잘못된 주소 정리 */
+      return showList().then(function () { flash(bad ? '글 번호가 올바르지 않아요. 아래 목록에서 글을 골라 주세요.' : ''); });
     }
 
     ready.then(function (ok) {
@@ -207,7 +227,8 @@
       if (!r[0]) return; /* 서버가 없으면 연습용 화면 그대로 */
       if (r[1]) { /* 로그인함: 닉네임은 로그인 정보로 자동 입력, 바꿀 수 없음 */
         var n = document.getElementById('w-name');
-        n.value = r[1].nickname; n.readOnly = true;
+        n.value = r[1].nickname; n.readOnly = true; n.setAttribute('aria-describedby', 'w-name-hint');
+        var hint = el('p', 'hint', '로그인한 닉네임이 자동으로 적용돼요.'); hint.id = 'w-name-hint'; n.parentNode.appendChild(hint);
         return;
       }
       var box = el('div', 'write-done'); box.id = 'need-login'; box.style.display = 'block';
@@ -265,6 +286,8 @@
   wire('.write-form[action^="write.html"]',
     [t('쓴 글은 '), b('게시판에 바로 올라가요.'), t(' 작성자는 로그인한 닉네임으로 표시돼요. 다른 방문자도 볼 수 있으니 개인정보는 적지 말아 주세요.')],
     function (say) {
+      if (!v('w-title').trim()) { say('제목을 입력해 주세요. (공백만으로는 쓸 수 없어요.)', 'error'); return Promise.resolve(); }
+      if (v('w-body').trim().length < 5) { say('내용은 공백을 뺀 5자 이상 써 주세요.', 'error'); return Promise.resolve(); }
       return Promise.all(picked.map(function (p) { return toBase64(p.file).then(function (data) { return { name: p.file.name, data: data }; }); }))
         .then(function (files) { return call('POST', '/api/posts', { category: v('w-cat'), title: v('w-title'), content: v('w-body'), files: files }); })
         .then(function (d) {

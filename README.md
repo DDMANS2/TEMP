@@ -168,3 +168,8 @@ Get-Content db/seed.sql   -Encoding UTF8 | sqlite3 db/board.db
 ```
 
 > GitHub Pages는 파일만 보여주는 곳이라 SQLite를 직접 실행할 수 없어요. 홈페이지에서 글을 저장·조회하려면 다음 단계에서 이 DB를 읽고 쓰는 작은 서버(API)를 붙여야 해요.
+
+## 보안·요청 제한 (참고)
+- `_headers`: 화면에 X-Frame-Options(다른 사이트가 iframe으로 넣는 것 차단), CSP(스크립트·영상 출처 제한), HSTS 등을 붙여요.
+- `functions/_middleware.js`: 다른 사이트에서 API를 마음대로 읽지 못하게 와일드카드 CORS를 걷어내요.
+- 로그인·가입은 요청 횟수를 제한해요(로그인: 같은 IP 1분 10회·같은 이메일 5번 실패 시 15분 잠금 / 가입: 같은 IP 10분 5회). 더 튼튼하게 하려면 Cloudflare 대시보드 **Security → WAF → Rate limiting rules**에서 `/api/login`·`/api/signup`에 규칙을 추가할 수 있어요.

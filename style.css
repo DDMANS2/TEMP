@@ -194,7 +194,7 @@ main { animation: pageIn .45s ease both; }
 }
 .card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 16px 40px -18px var(--glow); }
 .card .icon { font-size: 30px; margin-bottom: 14px; }
-.card h3 { font-size: 19px; margin-bottom: 8px; }
+.card h3, .card h2 { font-size: 19px; margin-bottom: 8px; }
 .card p { color: var(--muted); font-size: 15px; }
 .cards-5 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 .link-card { display: flex; flex-direction: column; }
@@ -293,7 +293,7 @@ input[type="range"]::-moz-range-thumb {
   background: var(--bg-2); border: 3px solid var(--accent); box-shadow: 0 0 0 4px rgba(229,50,45,.12);
 }
 .timeline time { color: var(--accent-2); font-weight: 800; letter-spacing: .08em; font-size: 14px; }
-.timeline h3 { margin: 2px 0 4px; font-size: 20px; }
+.timeline h3, .timeline h2 { margin: 2px 0 4px; font-size: 20px; }
 .timeline p { color: var(--muted); }
 
 /* ===== FAQ ===== */
@@ -325,7 +325,8 @@ input[type="range"]::-moz-range-thumb {
     border-bottom: 1px solid var(--line);
     max-height: 0; overflow: hidden; transition: max-height .3s ease;
   }
-  .nav.open { max-height: 320px; }
+  /* 항목이 늘어도(로그인 시 닉네임·로그아웃) 화면 높이 안에서 세로 스크롤로 모두 닿게 */
+  .nav.open { max-height: calc(100vh - var(--header-h)); max-height: calc(100svh - var(--header-h)); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
   .nav a { padding: 16px 24px; border-top: 1px solid var(--line); }
   .nav a::after { display: none; }
   .nav a[aria-current="page"] { box-shadow: inset 3px 0 0 var(--accent); background: rgba(229, 50, 45, .08); }
@@ -372,6 +373,11 @@ input[type="range"]::-moz-range-thumb {
 #cat-qna:checked ~ .board-list .row:not(.c-qna):not(.c-notice),
 #cat-info:checked ~ .board-list .row:not(.c-info):not(.c-notice) { display: none; }
 .board-empty { display: none; padding: 32px; text-align: center; color: var(--muted); }
+/* 글이 하나도 없는 분류(또는 빈 목록)를 고르면 안내 문구를 보여요 */
+#cat-free:checked ~ .board-list:not(:has(.row.c-free)) .board-empty,
+#cat-qna:checked ~ .board-list:not(:has(.row.c-qna)) .board-empty,
+#cat-info:checked ~ .board-list:not(:has(.row.c-info)) .board-empty,
+.board-list:not(:has(.row)) .board-empty { display: block; }
 
 /* 목록 표 */
 .board-list { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; }
@@ -482,9 +488,7 @@ fieldset.addr { border: 0; padding: 0; margin: 0; min-width: 0; gap: 10px; }
 .auth-switch a:hover { color: var(--accent); }
 main:has(.write-done:target) .auth-switch { display: none; }
 
-@media (max-width: 760px) {
-  .nav.open { max-height: 440px; }
-}
+/* 모바일 메뉴 높이는 위쪽 @media(max-width:760px)의 .nav.open 에서 화면 높이에 맞춰 정해요 (이슈 #12) */
 @media (max-width: 640px) {
   .board-table thead { display: none; }
   .board-table, .board-table tbody { display: block; }
@@ -532,3 +536,25 @@ main:has(.write-done:target) .auth-switch { display: none; }
 .post-files figcaption { margin-top: 6px; font-size: 13px; color: var(--muted); }
 .post-files figcaption a { color: var(--muted); text-decoration: underline; }
 .clip { margin-left: 4px; font-size: 13px; opacity: .8; }
+
+/* ---- 이슈 대응 ---- */
+/* 좁은 화면에서 파일 선택칸이 폼 밖으로 밀려나지 않게 */
+.field { min-width: 0; }
+.field input[type="file"] { width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0; }
+#w-files-box { min-width: 0; overflow: hidden; }
+/* 읽기 전용(로그인한 닉네임) 입력칸 */
+.field input[readonly] { background: #11141c; color: var(--muted); cursor: not-allowed; border-color: var(--line); user-select: none; }
+.field input[readonly]:focus { border-color: var(--line); box-shadow: none; }
+/* #done 을 주소창에 직접 붙여 들어온 경우(폼 제출 없음)에는 안내 대신 입력 화면 (script.js가 .fresh 를 붙임) */
+html.fresh .write-done:target { display: none; }
+html.fresh main:has(.write-done:target) .write-form { display: grid; }
+html.fresh main:has(.write-done:target) .write-done ~ .board-notice,
+html.fresh main:has(.write-done:target) .auth-switch { display: block; }
+/* 글 보기 아래 로그인 안내 (로그인 전) */
+.post-guest-cta { margin-top: 32px; padding: 22px; text-align: center; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.post-guest-cta p { color: var(--muted); margin-bottom: 14px; }
+.post-guest-cta .cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+@media (max-width: 520px) { .post-guest-cta .btn { flex: 1 1 100%; text-align: center; } }
+
+/* 글 번호가 잘못된 주소로 들어왔을 때 알림 (이슈 #16) */
+.board-flash { margin-bottom: 16px; }

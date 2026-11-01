@@ -35,10 +35,13 @@ TEMP/
 ├─ style.css script.js           ← 공통 디자인(어두운 배경, 빨강 강조) / 메뉴·스크롤 효과
 ├─ api.js                        ← 게시판·글쓰기·가입·로그인을 /api 와 연결 (서버 없으면 아무것도 안 함)
 ├─ functions/
+│  ├─ _middleware.js             ← 모든 응답에서 와일드카드 CORS(`*`) 제거, 허용 출처만 허용, /api에 nosniff
+│  ├─ _lib/ratelimit.js          ← 요청 횟수 제한(D1 `rate_limits`, 키는 해시). 오류 시 통과(fail-open)
 │  ├─ _lib/session.js            ← 로그인 세션(쿠키 토큰, DB엔 해시만). `sessions` 표는 처음 쓸 때 자동 생성
 │  ├─ _lib/files.js              ← 첨부 사진(이미지만, 3장·1MB). D1에 base64 조각으로 저장, 종류는 파일 내용으로 판별. 표는 처음 쓸 때 자동 생성
 │  ├─ _lib/util.js               ← JSON 응답, 입력 읽기, PBKDF2 비밀번호 해시
 │  └─ api/  posts/index.js  posts/[id].js  files/[id].js  signup.js  login.js  me.js  logout.js
+├─ _headers                      ← 정적 화면 보안 헤더(X-Frame-Options·CSP·HSTS 등). 외부 리소스를 추가하면 CSP도 고쳐요
 ├─ wrangler.toml                 ← Pages 설정 + D1 바인딩(DB). 이 파일이 설정의 기준
 ├─ db/  schema.sql  seed.sql     ← 테이블 정의, 예시 글 5개 (board.db 파일은 .gitignore)
 └─ images/
@@ -57,6 +60,7 @@ TEMP/
 | `/api/me` | GET | 로그인한 회원 `{user:{nickname}\|null}` |
 | `/api/logout` | POST | 세션 삭제 + 쿠키 만료 |
 
+- **요청 제한**: `/api/login` 같은 IP 1분 10회, 같은 이메일 15분 안에 5번 틀리면 15분 잠금(없는 이메일도 동일). `/api/signup` 같은 IP 10분 5회. 초과 시 429 + `Retry-After`. 닉네임은 한글·영문·숫자·`_`·`-`만(화면·서버 동일, DB CHECK는 아님).
 - 입력 규칙은 화면(HTML), API, DB `CHECK` 세 곳이 **같아야** 해요. 하나를 바꾸면 셋 다 바꿔요.
 - 비밀번호는 PBKDF2(SHA-256, 10만 회)를 `pbkdf2$횟수$솔트$해시`로 저장해요. 원문은 저장하지 않아요. Workers에서 PBKDF2 반복은 10만 회가 상한이에요.
 - 로그인 실패 메시지는 이메일이 없어도, 비밀번호가 틀려도 **같게** 보여요(가입 여부 노출 방지).
@@ -125,6 +129,7 @@ curl -s localhost:8790/api/posts
 9. **로그인 세션 + 글쓰기 로그인 제한**: 쿠키 세션(`sid`), `/api/me`·`/api/logout`, 글쓰기는 로그인한 회원만(작성자는 세션 닉네임). 헤더에 닉네임·로그아웃 표시. 서버 없는 GitHub Pages에서는 예전 연습용 화면 그대로. 실서비스에서 가입·로그인까지 한 시험은 하지 않음(시험 데이터 삭제에 토큰 필요).
 10. **글쓰기 버튼 잠금**: 로그인 전엔 🔒 표시(회색), 누르면 로그인 화면.
 11. **사진 첨부**(이미지만, D1 저장, 최대 3장·1MB): 글쓰기에서 선택·미리보기·삭제, 글 보기에서 사진 표시, 목록에 📎. 실서비스에서 업로드까지 한 시험은 하지 않음(시험 데이터 삭제용 토큰이 없음).
+12. **GitHub 이슈 #3~#16 대응**(모바일 가로넘침, 빈 분류 안내, readonly 스타일, 닉네임 문자 제한, #done 직접 접근, next 파라미터, 상세글 로그인 안내, 보안 헤더, 공백 검증, 모바일 메뉴 높이, 요청 제한, CORS, 제목 계층, 잘못된 글 해시). 이슈는 `gh api repos/DDMANS2/TEMP/issues`(GraphQL 불가)로 읽고 댓글·닫기.
 
 ## 10. 아직 안 된 것 / 다음 후보 (사용자가 요청할 때만)
 
