@@ -1,0 +1,10 @@
+# Cloudflare Pages 설정 (프로젝트 이름: temp)
+name = "temp"
+compatibility_date = "2026-10-30"
+pages_build_output_dir = "."
+
+# 게시판·회원 데이터가 들어 있는 D1 데이터베이스 (코드에서는 env.DB 로 사용)
+[[d1_databases]]
+binding = "DB"
+database_name = "temp-board"
+database_id = "075f757e-757d-4670-b21a-f7dcce243c1e"

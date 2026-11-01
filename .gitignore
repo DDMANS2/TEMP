@@ -3,3 +3,6 @@
 *.db-journal
 *.db-wal
 *.db-shm
+.wrangler/
+node_modules/
+.dev.vars

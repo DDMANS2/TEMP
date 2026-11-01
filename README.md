@@ -90,6 +90,22 @@
 
 > 서버가 없어서 **가입·로그인 정보는 전송되거나 저장되지 않아요.** 입력칸에 `name` 속성을 넣지 않아서 이메일·주소가 주소창에 남지도 않아요. 실제 회원 기능은 다음 단계에서 서버와 DB를 붙여야 해요.
 
+## 서버 (Cloudflare Pages Functions + D1)
+
+`functions/` 폴더의 파일이 그대로 API(Workers)가 돼요. 데이터는 Cloudflare D1(`temp-board`)에 저장되고, 코드에서는 `env.DB`로 써요. 설정은 `wrangler.toml`에 있어요.
+
+| 주소 | 방식 | 하는 일 |
+|---|---|---|
+| `/api/posts` | GET | 글 목록 (`?category=free` 로 분류 필터) |
+| `/api/posts` | POST | 글쓰기 `{category, author, title, content}` (공지는 불가) |
+| `/api/posts/번호` | GET | 글 보기 (조회수 +1) |
+| `/api/signup` | POST | 회원가입 `{nickname, email, password, gender, zipcode, address1, address2, agree}` |
+| `/api/login` | POST | 로그인 확인 `{email, password}` (로그인 상태 유지는 아직 없음) |
+
+- 비밀번호는 PBKDF2(SHA-256, 10만 회)로 해시해서 저장해요. 원문은 저장하지 않아요.
+- 화면(HTML)은 아직 이 API와 연결하지 않았어요.
+- 이 저장소에 푸시하면 Cloudflare Pages가 자동으로 배포해요.
+
 ## 데이터베이스 (SQLite)
 
 게시글과 회원 정보를 저장할 SQLite 데이터베이스 설계예요. 테이블은 `posts`(게시글), `users`(회원) 2개예요. 아직 홈페이지와 연결되지 않은 상태예요.
