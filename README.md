@@ -73,3 +73,47 @@
 ```
 
 분류 탭을 새로 만들려면 `board.html`에 라디오(`id="cat-새이름"`)와 `label`을 하나씩 추가하고, `style.css`의 게시판 부분에 같은 이름으로 선택자 두 줄(탭 강조, 목록 필터)을 추가하세요.
+
+## 데이터베이스 (SQLite)
+
+게시글을 저장할 SQLite 데이터베이스예요. 지금은 테이블 1개(`posts`)만 있어요.
+
+| 파일 | 내용 |
+|---|---|
+| `db/schema.sql` | 테이블 구조 |
+| `db/seed.sql` | 게시판의 예시 글 5개 |
+| `db/board.db` | 위 두 파일로 만든 DB 파일 (**저장소에는 올리지 않음**) |
+
+### `posts` 테이블
+
+| 컬럼 | 형식 | 설명 |
+|---|---|---|
+| `id` | INTEGER | 글 번호 (자동 증가) |
+| `category` | TEXT | `notice`(공지) · `free`(자유) · `qna`(질문) · `info`(정보) |
+| `title` | TEXT | 제목, 1~60자 |
+| `author` | TEXT | 닉네임, 2~12자 |
+| `content` | TEXT | 내용, 5자 이상 |
+| `views` | INTEGER | 조회수 (기본 0) |
+| `created_at` | TEXT | 작성 시각 (한국 시간, 자동) |
+| `updated_at` | TEXT | 수정 시각 (수정했을 때만) |
+
+글쓰기 화면(`write.html`)과 같은 입력 규칙이 DB에도 걸려 있어서, 규칙에 맞지 않는 글은 저장되지 않아요.
+
+### DB 만들기
+
+SQLite 설치 (Windows): https://sqlite.org/download.html 에서 **sqlite-tools-win-x64** zip을 받아 압축을 풀고, 그 폴더를 PATH에 추가하거나 `sqlite3.exe`를 저장소 폴더에 둡니다. (`winget install SQLite.SQLite` 로도 설치할 수 있어요.)
+
+```bash
+sqlite3 db/board.db < db/schema.sql   # 테이블 만들기
+sqlite3 db/board.db < db/seed.sql     # 예시 글 넣기
+sqlite3 -header -column db/board.db "SELECT id, category, title, author FROM posts;"
+```
+
+Windows PowerShell에서는 `<`가 안 되니 이렇게 하세요.
+
+```powershell
+Get-Content db/schema.sql -Encoding UTF8 | sqlite3 db/board.db
+Get-Content db/seed.sql   -Encoding UTF8 | sqlite3 db/board.db
+```
+
+> GitHub Pages는 파일만 보여주는 곳이라 SQLite를 직접 실행할 수 없어요. 홈페이지에서 글을 저장·조회하려면 다음 단계에서 이 DB를 읽고 쓰는 작은 서버(API)를 붙여야 해요.
