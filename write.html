@@ -52,9 +52,9 @@
               <label for="w-cat">분류</label>
               <select id="w-cat" required>
                 <option value="">분류를 고르세요</option>
-                <option>자유</option>
-                <option>질문</option>
-                <option>정보</option>
+                <option value="free">자유</option>
+                <option value="qna">질문</option>
+                <option value="info">정보</option>
               </select>
             </div>
             <div class="field">
@@ -79,6 +79,8 @@
             <label for="w-agree">게시판 이용 안내를 확인했어요</label>
           </div>
 
+          <p class="form-msg" role="status" aria-live="polite" hidden></p>
+
           <div class="form-actions">
             <a class="btn ghost" href="board.html">취소</a>
             <button class="btn primary" type="submit">등록</button>
@@ -94,5 +96,6 @@
   </footer>
 
   <script src="script.js"></script>
+  <script src="api.js"></script>
 </body>
 </html>

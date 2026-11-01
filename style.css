@@ -504,3 +504,12 @@ main:has(.write-done:target) .auth-switch { display: none; }
 .cards-6 { grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 900px) { .cards-6 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 520px) { .cards-6 { grid-template-columns: 1fr; } }
+
+/* 서버와 연결된 게시판: 글 보기는 JS가 켜고 끔 */
+.board-page.live-view .board { display: none; }
+.post.live { display: block; animation: pageIn .35s ease both; }
+.post.live[hidden] { display: none; }
+.form-msg { font-size: 14px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); }
+.form-msg.error { color: #ff8a73; border-color: #ff6a4d66; background: rgba(255, 106, 77, .08); }
+.form-msg.ok { color: #6fd3a0; border-color: #6fd3a066; background: rgba(111, 211, 160, .08); }
+.form-actions .btn:disabled { opacity: .6; cursor: progress; }
