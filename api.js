@@ -17,6 +17,42 @@
     .then(function (r) { return r.ok && (r.headers.get('content-type') || '').indexOf('json') > -1; })
     .catch(function () { return false; });
 
+  /* ---------- 로그인한 회원 확인 (서버가 있을 때만) ---------- */
+  var me = ready.then(function (ok) {
+    if (!ok) return null;
+    return fetch('/api/me', { headers: { accept: 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { return d && d.user ? d.user : null; })
+      .catch(function () { return null; });
+  });
+
+  /* 로그인 후 돌아갈 곳 (같은 사이트의 정해진 화면만 허용) */
+  var nextPage = function () {
+    var m = /[?&]next=([a-z]+\.html)\b/.exec(location.search);
+    return m && ['write.html', 'board.html'].indexOf(m[1]) > -1 ? m[1] : 'board.html';
+  };
+
+  /* ---------- 헤더: 로그인 ↔ 닉네임·로그아웃 / 글쓰기 버튼 ---------- */
+  Promise.all([ready, me]).then(function (r) {
+    if (!r[0]) return; /* 서버가 없으면 그대로 */
+    var user = r[1], link = $('.nav a[href="login.html"]');
+    if (user && link) {
+      link.textContent = user.nickname + '님';
+      link.href = 'board.html';
+      link.removeAttribute('aria-current');
+      var out = el('a', null, '로그아웃'); out.href = '#logout';
+      out.addEventListener('click', function (e) {
+        e.preventDefault();
+        call('POST', '/api/logout', {}).then(function () { location.href = 'index.html'; });
+      });
+      link.parentNode.insertBefore(out, link.nextSibling);
+    }
+    if (!user) {
+      var w = document.querySelectorAll('a[href="write.html"]');
+      for (var i = 0; i < w.length; i++) w[i].href = 'login.html?next=write.html';
+    }
+  });
+
   function call(method, url, body) {
     return fetch(url, {
       method: method,
@@ -146,13 +182,38 @@
   }
   var v = function (id) { return document.getElementById(id).value; };
 
-  /* ================= 글쓰기 ================= */
+  /* ================= 글쓰기 (로그인한 회원만) ================= */
+  (function gateWrite() {
+    var form = $('.write-form[action^="write.html"]');
+    if (!form) return;
+    Promise.all([ready, me]).then(function (r) {
+      if (!r[0]) return; /* 서버가 없으면 연습용 화면 그대로 */
+      if (r[1]) { /* 로그인함: 닉네임은 로그인 정보로 자동 입력, 바꿀 수 없음 */
+        var n = document.getElementById('w-name');
+        n.value = r[1].nickname; n.readOnly = true;
+        return;
+      }
+      var box = el('div', 'write-done'); box.id = 'need-login'; box.style.display = 'block';
+      box.appendChild(el('p', 'eyebrow', 'LOGIN'));
+      box.appendChild(el('h2', null, '로그인한 뒤에 글을 쓸 수 있어요'));
+      box.appendChild(el('p', null, '게시판 글쓰기는 회원만 할 수 있어요. 로그인하거나, 아직 회원이 아니라면 가입해 주세요.'));
+      var cta = el('div', 'cta');
+      var a1 = el('a', 'btn primary', '로그인'); a1.href = 'login.html?next=write.html';
+      var a2 = el('a', 'btn ghost', '회원가입'); a2.href = 'signup.html';
+      cta.appendChild(a1); cta.appendChild(a2); box.appendChild(cta);
+      form.parentNode.insertBefore(box, form);
+      form.hidden = true; form.style.display = 'none'; /* CSS의 display가 hidden을 이기지 않게 */
+      var nt = $('.board-notice'); if (nt) nt.hidden = true;
+    });
+  })();
+
   wire('.write-form[action^="write.html"]',
-    [t('쓴 글은 '), b('게시판에 바로 올라가요.'), t(' 다른 방문자도 볼 수 있으니 개인정보는 적지 말아 주세요.')],
+    [t('쓴 글은 '), b('게시판에 바로 올라가요.'), t(' 작성자는 로그인한 닉네임으로 표시돼요. 다른 방문자도 볼 수 있으니 개인정보는 적지 말아 주세요.')],
     function (say) {
-      return call('POST', '/api/posts', { category: v('w-cat'), author: v('w-name'), title: v('w-title'), content: v('w-body') })
+      return call('POST', '/api/posts', { category: v('w-cat'), title: v('w-title'), content: v('w-body') })
         .then(function (d) {
           if (d.ok) { say('등록했어요!', 'ok'); location.href = 'board.html#post-' + d.id; }
+          else if (d.status === 401) say('로그인이 풀렸어요. 다시 로그인해 주세요.', 'error');
           else say(d.error || '등록하지 못했어요.', 'error');
         });
     });
@@ -172,10 +233,10 @@
 
   /* ================= 로그인 ================= */
   wire('.write-form[action^="login.html"]',
-    [t('가입한 이메일과 비밀번호를 입력해 주세요. '), b('로그인 상태를 기억하는 기능은 아직 없어요.')],
+    [t('가입한 이메일과 비밀번호를 입력해 주세요. 로그인하면 '), b('7일 동안'), t(' 로그인 상태가 유지돼요.')],
     function (say) {
       return call('POST', '/api/login', { email: v('l-email'), password: v('l-pw') }).then(function (d) {
-        if (d.ok) say(d.nickname + '님, 이메일과 비밀번호가 맞아요. (아직 로그인 상태를 기억하는 기능은 없어요.)', 'ok');
+        if (d.ok) { say(d.nickname + '님, 로그인했어요!', 'ok'); setTimeout(function () { location.href = nextPage(); }, 700); }
         else say(d.error || '로그인하지 못했어요.', 'error');
       });
     });

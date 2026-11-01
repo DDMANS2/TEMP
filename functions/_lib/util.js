@@ -1,9 +1,9 @@
 // 공통 도우미: JSON 응답, 입력 읽기, 비밀번호 해시(PBKDF2)
 
-export const json = (data, status = 200) =>
+export const json = (data, status = 200, extraHeaders = {}) =>
   new Response(JSON.stringify(data), {
     status,
-    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
+    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...extraHeaders },
   });
 
 export const fail = (status, message) => json({ ok: false, error: message }, status);

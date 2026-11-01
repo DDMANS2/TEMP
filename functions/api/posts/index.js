@@ -1,6 +1,7 @@
 // GET  /api/posts?category=free   글 목록 (공지가 맨 위, 그다음 최신순)
-// POST /api/posts                 글쓰기 {category, author, title, content}
+// POST /api/posts                 글쓰기 {category, title, content} — 로그인한 회원만 (작성자는 로그인한 닉네임으로 자동 기록)
 import { json, fail, readJson, str } from "../../_lib/util.js";
+import { currentUser } from "../../_lib/session.js";
 
 const CATEGORIES = ["notice", "free", "qna", "info"];
 const WRITABLE = ["free", "qna", "info"]; // 공지는 운영자만 (화면에서도 공지는 선택 불가)
@@ -20,11 +21,13 @@ export async function onRequestGet({ request, env }) {
 }
 
 export async function onRequestPost({ request, env }) {
+  const user = await currentUser(request, env);
+  if (!user) return fail(401, "로그인한 뒤에 글을 쓸 수 있어요.");
   const b = await readJson(request);
   if (!b) return fail(400, "요청 형식이 올바르지 않아요.");
-  const category = str(b.category), author = str(b.author), title = str(b.title), content = str(b.content);
+  const author = user.nickname; // 화면에서 보낸 작성자 값은 믿지 않고, 로그인 정보를 써요
+  const category = str(b.category), title = str(b.title), content = str(b.content);
   if (!WRITABLE.includes(category)) return fail(400, "분류를 확인해 주세요.");
-  if (author.length < 2 || author.length > 12) return fail(400, "닉네임은 2~12자예요.");
   if (title.length < 1 || title.length > 60) return fail(400, "제목은 1~60자예요.");
   if (content.length < 5) return fail(400, "내용은 5자 이상 써 주세요.");
   const r = await env.DB.prepare("INSERT INTO posts (category, title, author, content) VALUES (?, ?, ?, ?)")

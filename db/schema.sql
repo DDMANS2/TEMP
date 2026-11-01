@@ -46,3 +46,13 @@ CREATE TABLE IF NOT EXISTS users (
                  DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now', '+9 hours')), -- 가입 시각 (한국 시간)
   last_login_at  TEXT                                                      -- 마지막 로그인 시각
 );
+
+
+-- ===== 로그인 상태 기억 (세션) =====
+-- 서버(functions/_lib/session.js)가 처음 쓸 때 같은 정의로 자동 생성하기도 해요. 토큰 원문은 저장하지 않고 해시만 저장.
+CREATE TABLE IF NOT EXISTS sessions (
+  token_hash  TEXT    PRIMARY KEY,                                          -- 쿠키 토큰의 SHA-256 해시
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,      -- 로그인한 회원
+  created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now', '+9 hours')),
+  expires_at  TEXT    NOT NULL                                              -- 만료 시각 (로그인 후 7일)
+);

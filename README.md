@@ -88,7 +88,7 @@
 | 비밀번호 | 8자 이상 (로그인에 필요해서 추가) |
 | 집 주소 | 우편번호 5자리 + 기본 주소 + 상세 주소(선택) |
 
-> 서버가 없는 곳에서는 **가입·로그인 정보가 전송되거나 저장되지 않아요.** 서버가 있는 주소에서는 `api.js`가 `/api/signup`, `/api/login`으로 보내서 D1에 저장·확인해요. 로그인 상태 유지(세션)는 아직 없어요.
+> 서버가 없는 곳에서는 **가입·로그인 정보가 전송되거나 저장되지 않아요.** 서버가 있는 주소에서는 `api.js`가 `/api/signup`, `/api/login`으로 보내서 D1에 저장·확인해요. 로그인하면 7일 동안 로그인 상태가 유지되고(쿠키), 글쓰기는 로그인한 회원만 할 수 있어요.
 
 ## 서버 (Cloudflare Pages Functions + D1)
 
@@ -97,10 +97,12 @@
 | 주소 | 방식 | 하는 일 |
 |---|---|---|
 | `/api/posts` | GET | 글 목록 (`?category=free` 로 분류 필터) |
-| `/api/posts` | POST | 글쓰기 `{category, author, title, content}` (공지는 불가) |
+| `/api/posts` | POST | 글쓰기 `{category, title, content}` — **로그인한 회원만**(아니면 401). 작성자는 로그인한 닉네임으로 자동 기록, 공지는 불가 |
 | `/api/posts/번호` | GET | 글 보기 (조회수 +1) |
 | `/api/signup` | POST | 회원가입 `{nickname, email, password, gender, zipcode, address1, address2, agree}` |
-| `/api/login` | POST | 로그인 확인 `{email, password}` (로그인 상태 유지는 아직 없음) |
+| `/api/login` | POST | 로그인 `{email, password}` — 성공하면 로그인 쿠키(7일) 발급 |
+| `/api/me` | GET | 지금 로그인한 회원 확인 |
+| `/api/logout` | POST | 로그아웃 |
 
 - 비밀번호는 PBKDF2(SHA-256, 10만 회)로 해시해서 저장해요. 원문은 저장하지 않아요.
 - 화면은 `api.js`가 이 API와 연결해요 (게시판 목록·글 보기, 글쓰기, 회원가입, 로그인).

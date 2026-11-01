@@ -1,6 +1,7 @@
 // POST /api/login   {email, password}
-// 비밀번호 확인 + 마지막 로그인 시각 기록까지만 해요. (로그인 상태 유지(세션)는 아직 없음)
+// 비밀번호 확인 + 마지막 로그인 시각 기록 + 로그인 상태 기억(쿠키 세션, 7일)
 import { json, fail, readJson, str, verifyPassword } from "../_lib/util.js";
+import { createSession } from "../_lib/session.js";
 
 export async function onRequestPost({ request, env }) {
   const b = await readJson(request);
@@ -13,5 +14,6 @@ export async function onRequestPost({ request, env }) {
   if (!user || !(await verifyPassword(password, user.password_hash))) return fail(401, "이메일 또는 비밀번호가 맞지 않아요.");
 
   await env.DB.prepare("UPDATE users SET last_login_at = strftime('%Y-%m-%d %H:%M:%S', 'now', '+9 hours') WHERE id = ?").bind(user.id).run();
-  return json({ ok: true, nickname: user.nickname });
+  const setCookie = await createSession(env, user.id);
+  return json({ ok: true, nickname: user.nickname }, 200, { "set-cookie": setCookie });
 }

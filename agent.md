@@ -35,8 +35,9 @@ TEMP/
 ├─ style.css script.js           ← 공통 디자인(어두운 배경, 빨강 강조) / 메뉴·스크롤 효과
 ├─ api.js                        ← 게시판·글쓰기·가입·로그인을 /api 와 연결 (서버 없으면 아무것도 안 함)
 ├─ functions/
+│  ├─ _lib/session.js            ← 로그인 세션(쿠키 토큰, DB엔 해시만). `sessions` 표는 처음 쓸 때 자동 생성
 │  ├─ _lib/util.js               ← JSON 응답, 입력 읽기, PBKDF2 비밀번호 해시
-│  └─ api/  posts/index.js  posts/[id].js  signup.js  login.js
+│  └─ api/  posts/index.js  posts/[id].js  signup.js  login.js  me.js  logout.js
 ├─ wrangler.toml                 ← Pages 설정 + D1 바인딩(DB). 이 파일이 설정의 기준
 ├─ db/  schema.sql  seed.sql     ← 테이블 정의, 예시 글 5개 (board.db 파일은 .gitignore)
 └─ images/
@@ -47,10 +48,12 @@ TEMP/
 | 주소 | 방식 | 하는 일 |
 |---|---|---|
 | `/api/posts` | GET | 목록 (`?category=free\|qna\|info\|notice`), 공지가 맨 위 |
-| `/api/posts` | POST | 글쓰기 `{category, author, title, content}` — `notice`는 거부 |
+| `/api/posts` | POST | 글쓰기 `{category, title, content}` — **로그인 필수(401)**, 작성자=세션 닉네임(보낸 author는 무시), `notice`는 거부 |
 | `/api/posts/번호` | GET | 글 보기 (조회수 +1) |
 | `/api/signup` | POST | 가입 `{nickname, email, password, gender, zipcode, address1, address2?, agree}` |
-| `/api/login` | POST | 이메일·비밀번호 확인 + `last_login_at` 기록 (**세션 없음**) |
+| `/api/login` | POST | 이메일·비밀번호 확인 + `last_login_at` 기록 + **세션 쿠키 `sid`**(HttpOnly·Secure·SameSite=Lax, 7일) |
+| `/api/me` | GET | 로그인한 회원 `{user:{nickname}\|null}` |
+| `/api/logout` | POST | 세션 삭제 + 쿠키 만료 |
 
 - 입력 규칙은 화면(HTML), API, DB `CHECK` 세 곳이 **같아야** 해요. 하나를 바꾸면 셋 다 바꿔요.
 - 비밀번호는 PBKDF2(SHA-256, 10만 회)를 `pbkdf2$횟수$솔트$해시`로 저장해요. 원문은 저장하지 않아요. Workers에서 PBKDF2 반복은 10만 회가 상한이에요.
@@ -116,12 +119,12 @@ curl -s localhost:8790/api/posts
 6. 사용자가 서버 연동을 요청 → **D1 `temp-board` 생성**, 스키마·예시 글 적용, **Pages Functions API** 작성, 기존 Pages 프로젝트 `temp`와 연결·배포.
 7. **`api.js`로 화면 연결**: 게시판 목록·글 보기(조회수), 글쓰기, 가입, 로그인. 서버가 없으면 기존 연습용 화면으로 폴백.
 8. 배포 후 실서비스에서 글쓰기·가입·로그인을 한 번씩 시험하고 **시험 데이터는 삭제**함.
+9. **로그인 세션 + 글쓰기 로그인 제한**: 쿠키 세션(`sid`), `/api/me`·`/api/logout`, 글쓰기는 로그인한 회원만(작성자는 세션 닉네임). 헤더에 닉네임·로그아웃 표시. 서버 없는 GitHub Pages에서는 예전 연습용 화면 그대로. 실서비스에서 가입·로그인까지 한 시험은 하지 않음(시험 데이터 삭제에 토큰 필요).
 
 ## 10. 아직 안 된 것 / 다음 후보 (사용자가 요청할 때만)
 
-- **로그인 상태 유지(세션)**: 지금은 로그인 확인 메시지만 나옴. 쿠키 세션(HttpOnly, SameSite) + 로그아웃 필요.
 - 댓글(`comments` 테이블 + API): 예시 글의 댓글은 아직 DB에 없음.
-- 본인 글 수정·삭제 (세션이 있어야 함), 공지 작성(운영자 권한).
+- 본인 글 수정·삭제, 공지 작성(운영자 권한) — 세션은 있으니 `currentUser()`로 구현 가능.
 - 가입·로그인 남용 방지(요청 횟수 제한), 이메일 인증, 비밀번호 재설정.
 - 페이지네이션(현재 최대 100개), 검색.
 - 모바일 가입 화면 실기기 확인(데스크톱과 메뉴만 확인함).
