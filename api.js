@@ -47,9 +47,16 @@
       });
       link.parentNode.insertBefore(out, link.nextSibling);
     }
-    if (!user) {
-      var w = document.querySelectorAll('a[href="write.html"]');
-      for (var i = 0; i < w.length; i++) w[i].href = 'login.html?next=write.html';
+    if (!user) { /* 로그인 전: 글쓰기 버튼을 잠가요 (눌러도 글쓰기 화면이 아니라 로그인 화면으로 가요) */
+      var w = document.querySelectorAll('a.btn[href="write.html"]');
+      for (var i = 0; i < w.length; i++) {
+        w[i].href = 'login.html?next=write.html';
+        w[i].classList.add('is-locked');
+        w[i].setAttribute('aria-disabled', 'true');
+        w[i].title = '로그인한 뒤에 글을 쓸 수 있어요';
+        w[i].textContent = '🔒 로그인 후 글쓰기';
+      }
+      if ($('.board-page')) setNotice([t('팬들이 올린 글을 볼 수 있어요. '), b('글쓰기는 로그인한 회원만'), t(' 할 수 있어요.')]);
     }
   });
 

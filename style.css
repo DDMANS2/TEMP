@@ -148,6 +148,8 @@ ol { list-style: none; }
 .btn.primary { background: var(--accent); box-shadow: 0 8px 30px var(--glow); }
 .btn.primary:hover { transform: translateY(-2px); background: #ff4640; }
 .btn.ghost { border-color: #3a4152; color: var(--text); }
+/* 로그인 전 글쓰기 버튼: 잠긴 모양 (api.js가 붙임) */
+.btn.primary.is-locked, .btn.primary.is-locked:hover { background: #2a303d; color: #9aa3b5; box-shadow: none; transform: none; cursor: not-allowed; }
 .btn.ghost:hover { border-color: var(--text); transform: translateY(-2px); }
 
 .scroll-hint {
