@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>글쓰기 | Roadster 팬 페이지 게시판</title>
+  <meta name="description" content="로드스터 팬 페이지 게시판 글쓰기 화면이에요. HTML과 CSS만으로 만든 연습용 화면입니다.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="index.html" aria-label="홈으로">ROADSTER<span>FAN</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="nav" aria-label="주요 메뉴">
+      <a href="highlights.html">특징</a>
+      <a href="specs.html">사양</a>
+      <a href="charging.html">충전 계산기</a>
+      <a href="timeline.html">연혁</a>
+      <a href="faq.html">FAQ</a>
+      <a href="board.html" aria-current="page">게시판</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section page-section" aria-labelledby="wrTitle">
+      <div class="container narrow">
+
+        <!-- 등록 버튼을 누르면 주소가 #done 으로 바뀌고 이 안내가 보여요 (CSS :target) -->
+        <div class="write-done" id="done" role="status">
+          <p class="eyebrow">NOTICE</p>
+          <h2>연습용이라 글이 저장되지 않았어요</h2>
+          <p>이 게시판은 HTML과 CSS만으로 만들어서 글을 저장할 서버가 없어요. 실제로 글을 올리려면 <code>board.html</code> 파일에 직접 추가해 주세요. 방법은 저장소 README에 있어요.</p>
+          <div class="cta">
+            <a class="btn primary" href="board.html">목록으로</a>
+            <a class="btn ghost" href="write.html">다시 써보기</a>
+          </div>
+        </div>
+
+        <a class="back" href="board.html">← 목록으로</a>
+        <p class="eyebrow">WRITE</p>
+        <h1 id="wrTitle">글쓰기</h1>
+        <p class="board-notice">연습용 화면이에요. 빈칸 확인까지는 동작하지만, <strong>등록해도 글이 저장되지는 않아요.</strong></p>
+
+        <!-- name 속성을 넣지 않아서, 등록해도 입력한 내용이 주소창에 남지 않아요 -->
+        <form class="write-form" action="write.html#done" method="get">
+          <div class="field-row">
+            <div class="field">
+              <label for="w-cat">분류</label>
+              <select id="w-cat" required>
+                <option value="">분류를 고르세요</option>
+                <option>자유</option>
+                <option>질문</option>
+                <option>정보</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="w-name">닉네임</label>
+              <input id="w-name" type="text" maxlength="12" placeholder="2~12자" minlength="2" required autocomplete="nickname">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="w-title">제목</label>
+            <input id="w-title" type="text" maxlength="60" placeholder="제목을 입력하세요" required>
+          </div>
+
+          <div class="field">
+            <label for="w-body">내용</label>
+            <textarea id="w-body" rows="10" minlength="5" placeholder="내용을 입력하세요 (5자 이상)" required></textarea>
+            <p class="hint">다른 사람을 불쾌하게 하는 글이나 개인정보는 올리지 말아 주세요.</p>
+          </div>
+
+          <div class="field check">
+            <input id="w-agree" type="checkbox" required>
+            <label for="w-agree">게시판 이용 안내를 확인했어요</label>
+          </div>
+
+          <div class="form-actions">
+            <a class="btn ghost" href="board.html">취소</a>
+            <button class="btn primary" type="submit">등록</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>비공식 팬 페이지</strong> · 상표와 제품명은 각 소유자에게 있어요. 이 사이트는 어떤 기업과도 제휴, 후원 관계가 아닙니다.</p>
+    <p class="small">정보 기준: 2026년 10월 · 언론 보도 종합 · 자동차 그림은 가상 일러스트 · 공식 영상은 Tesla 유튜브 퍼가기 · 연습용 프로젝트</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

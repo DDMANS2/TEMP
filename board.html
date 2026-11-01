@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>게시판 | Roadster 팬 페이지</title>
+  <meta name="description" content="로드스터 팬 페이지 게시판이에요. HTML과 CSS만으로 만든 연습용 게시판입니다.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="index.html" aria-label="홈으로">ROADSTER<span>FAN</span></a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="nav" aria-label="주요 메뉴">
+      <a href="highlights.html">특징</a>
+      <a href="specs.html">사양</a>
+      <a href="charging.html">충전 계산기</a>
+      <a href="timeline.html">연혁</a>
+      <a href="faq.html">FAQ</a>
+      <a href="board.html" aria-current="page">게시판</a>
+    </nav>
+  </header>
+
+  <main class="board-page">
+    <section class="section page-section" aria-labelledby="bdTitle">
+      <div class="container">
+
+        <!-- ===== 글 목록 ===== -->
+        <div class="board" id="list">
+          <div class="board-head">
+            <div>
+              <p class="eyebrow">BOARD</p>
+              <h1 id="bdTitle">게시판</h1>
+            </div>
+            <a class="btn primary" href="write.html">✏️ 글쓰기</a>
+          </div>
+
+          <p class="board-notice">HTML과 CSS만으로 만든 <strong>연습용 게시판</strong>이에요. 아래 글은 게시판 모양을 보여주기 위한 <strong>예시 글</strong>이고, 글을 누르면 내용을 볼 수 있어요.</p>
+
+          <!-- 분류 탭: 라디오 버튼 + label (CSS만으로 필터) -->
+          <input class="cat-radio" type="radio" name="cat" id="cat-all" checked>
+          <input class="cat-radio" type="radio" name="cat" id="cat-free">
+          <input class="cat-radio" type="radio" name="cat" id="cat-qna">
+          <input class="cat-radio" type="radio" name="cat" id="cat-info">
+
+          <div class="board-tabs" role="group" aria-label="게시글 분류">
+            <label for="cat-all">전체</label>
+            <label for="cat-free">자유</label>
+            <label for="cat-qna">질문</label>
+            <label for="cat-info">정보</label>
+          </div>
+
+          <div class="board-list">
+            <table class="board-table">
+              <caption class="sr-only">게시글 목록</caption>
+              <thead>
+                <tr>
+                  <th scope="col" class="col-no">번호</th>
+                  <th scope="col" class="col-cat">분류</th>
+                  <th scope="col">제목</th>
+                  <th scope="col" class="col-author">글쓴이</th>
+                  <th scope="col" class="col-date">날짜</th>
+                  <th scope="col" class="col-view">조회</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 공지는 어떤 분류를 골라도 항상 맨 위에 보여요 -->
+                <tr class="row c-notice">
+                  <td class="col-no"><span class="badge notice">공지</span></td>
+                  <td class="col-cat">공지</td>
+                  <td class="col-title"><a href="#post-1">게시판 이용 안내 <span class="cmt">[1]</span></a></td>
+                  <td class="col-author">운영자</td>
+                  <td class="col-date">11.01</td>
+                  <td class="col-view">128</td>
+                </tr>
+                <tr class="row c-qna">
+                  <td class="col-no">5</td>
+                  <td class="col-cat"><span class="badge qna">질문</span></td>
+                  <td class="col-title"><a href="#post-5">충전 계산기는 어떤 기준으로 계산하나요? <span class="cmt">[2]</span></a> <span class="new" aria-label="새 글">N</span></td>
+                  <td class="col-author">전기차입문</td>
+                  <td class="col-date">11.01</td>
+                  <td class="col-view">42</td>
+                </tr>
+                <tr class="row c-free">
+                  <td class="col-no">4</td>
+                  <td class="col-cat"><span class="badge free">자유</span></td>
+                  <td class="col-title"><a href="#post-4">공식 영상 다시 봤는데 가속 장면이 인상적이네요 <span class="cmt">[1]</span></a> <span class="new" aria-label="새 글">N</span></td>
+                  <td class="col-author">로드스터팬</td>
+                  <td class="col-date">11.01</td>
+                  <td class="col-view">57</td>
+                </tr>
+                <tr class="row c-info">
+                  <td class="col-no">3</td>
+                  <td class="col-cat"><span class="badge info">정보</span></td>
+                  <td class="col-title"><a href="#post-3">사양 페이지 보는 법 — 태그 색깔의 의미</a></td>
+                  <td class="col-author">운영자</td>
+                  <td class="col-date">10.31</td>
+                  <td class="col-view">96</td>
+                </tr>
+                <tr class="row c-free">
+                  <td class="col-no">2</td>
+                  <td class="col-cat"><span class="badge free">자유</span></td>
+                  <td class="col-title"><a href="#post-2">양산 일정, 이번엔 지켜질까요? <span class="cmt">[2]</span></a></td>
+                  <td class="col-author">드라이브</td>
+                  <td class="col-date">10.31</td>
+                  <td class="col-view">73</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="board-empty">이 분류에는 아직 글이 없어요.</p>
+          </div>
+
+          <nav class="pager" aria-label="페이지">
+            <span class="pg off" aria-hidden="true">‹</span>
+            <a class="pg on" href="#list" aria-current="page">1</a>
+            <span class="pg off" aria-hidden="true">›</span>
+          </nav>
+        </div>
+
+        <!-- ===== 글 보기: 주소가 #post-N 일 때만 보여요 (CSS :target) ===== -->
+        <div class="posts">
+
+          <article class="post" id="post-1" aria-labelledby="p1">
+            <a class="back" href="#list">← 목록으로</a>
+            <header class="post-head">
+              <span class="badge notice">공지</span>
+              <h2 id="p1">게시판 이용 안내</h2>
+              <p class="post-meta"><span>운영자</span><span>2026.11.01</span><span>조회 128</span></p>
+            </header>
+            <div class="post-body">
+              <p>로드스터 팬 페이지 게시판에 오신 걸 환영해요. 이 게시판은 <strong>HTML과 CSS만으로</strong> 만든 연습용 게시판이에요.</p>
+              <ul>
+                <li>분류 탭(전체·자유·질문·정보)은 CSS만으로 동작해요.</li>
+                <li>글을 누르면 주소 끝이 <code>#post-번호</code>로 바뀌면서 이 화면처럼 글 내용이 보여요.</li>
+                <li>서버가 없어서 <strong>글쓰기 화면에서 쓴 글은 저장되지 않아요.</strong> 새 글은 <code>board.html</code> 파일에 직접 추가해요.</li>
+              </ul>
+              <p>지금 보이는 글들은 게시판 모양을 보여주기 위한 예시 글이에요.</p>
+            </div>
+            <section class="comments" aria-label="댓글 1개">
+              <h3>댓글 <span>1</span></h3>
+              <div class="comment"><p class="c-meta"><strong>운영자</strong><span>11.01</span></p><p>새 글 추가 방법은 저장소의 README에 정리해 뒀어요.</p></div>
+            </section>
+            <nav class="post-nav" aria-label="다른 글"><a href="#post-5">다음 글 · 충전 계산기는 어떤 기준으로 계산하나요?</a></nav>
+          </article>
+
+          <article class="post" id="post-5" aria-labelledby="p5">
+            <a class="back" href="#list">← 목록으로</a>
+            <header class="post-head">
+              <span class="badge qna">질문</span>
+              <h2 id="p5">충전 계산기는 어떤 기준으로 계산하나요?</h2>
+              <p class="post-meta"><span>전기차입문</span><span>2026.11.01</span><span>조회 42</span></p>
+            </header>
+            <div class="post-body">
+              <p>충전 계산기에서 구간을 바꾸면 시간이 바로 바뀌던데, 어떤 기준으로 계산하는 건지 궁금해요.</p>
+            </div>
+            <section class="comments" aria-label="댓글 2개">
+              <h3>댓글 <span>2</span></h3>
+              <div class="comment"><p class="c-meta"><strong>운영자</strong><span>11.01</span></p><p>보도된 임원 발언(15% → 85% 충전에 약 10분)을 기준으로, 1%마다 걸리는 시간이 같다고 보고 단순 계산해요. 실제 충전은 배터리가 찰수록 느려지니 참고용으로만 봐 주세요.</p></div>
+              <div class="comment"><p class="c-meta"><strong>전기차입문</strong><span>11.01</span></p><p>아하, 그래서 참고용이라고 적혀 있었군요. 감사합니다!</p></div>
+            </section>
+            <nav class="post-nav" aria-label="다른 글"><a href="#post-1">이전 글 · 게시판 이용 안내</a><a href="#post-4">다음 글 · 공식 영상 다시 봤는데…</a></nav>
+          </article>
+
+          <article class="post" id="post-4" aria-labelledby="p4">
+            <a class="back" href="#list">← 목록으로</a>
+            <header class="post-head">
+              <span class="badge free">자유</span>
+              <h2 id="p4">공식 영상 다시 봤는데 가속 장면이 인상적이네요</h2>
+              <p class="post-meta"><span>로드스터팬</span><span>2026.11.01</span><span>조회 57</span></p>
+            </header>
+            <div class="post-body">
+              <p>홈에 있는 공식 공개 영상을 오랜만에 다시 봤어요. 다들 어떤 장면이 제일 기억에 남으세요?</p>
+            </div>
+            <section class="comments" aria-label="댓글 1개">
+              <h3>댓글 <span>1</span></h3>
+              <div class="comment"><p class="c-meta"><strong>드라이브</strong><span>11.01</span></p><p>저는 마지막에 차가 멈춰 서는 장면이요.</p></div>
+            </section>
+            <nav class="post-nav" aria-label="다른 글"><a href="#post-5">이전 글 · 충전 계산기는 어떤 기준으로…</a><a href="#post-3">다음 글 · 사양 페이지 보는 법</a></nav>
+          </article>
+
+          <article class="post" id="post-3" aria-labelledby="p3">
+            <a class="back" href="#list">← 목록으로</a>
+            <header class="post-head">
+              <span class="badge info">정보</span>
+              <h2 id="p3">사양 페이지 보는 법 — 태그 색깔의 의미</h2>
+              <p class="post-meta"><span>운영자</span><span>2026.10.31</span><span>조회 96</span></p>
+            </header>
+            <div class="post-body">
+              <p><a class="inline" href="specs.html">사양 페이지</a>의 표에는 수치마다 출처를 알려주는 태그가 붙어 있어요.</p>
+              <ul>
+                <li><span class="tag claim">주장</span> 회사나 임원이 밝힌 수치 (예: 출력, 충전 시간)</li>
+                <li><span class="tag report">보도</span> 언론이 보도한 내용 (예: 구동 방식, 좌석)</li>
+                <li><span class="tag est">추정</span> 다른 수치를 바탕으로 짐작한 값 (예: 항속거리)</li>
+                <li><span class="tag none">미공개</span> 아직 공개되지 않은 항목 (예: 가격)</li>
+              </ul>
+              <p>모두 참고용 정보예요. 정확한 사양은 제조사의 공식 발표를 확인해 주세요.</p>
+            </div>
+            <nav class="post-nav" aria-label="다른 글"><a href="#post-4">이전 글 · 공식 영상 다시 봤는데…</a><a href="#post-2">다음 글 · 양산 일정, 이번엔 지켜질까요?</a></nav>
+          </article>
+
+          <article class="post" id="post-2" aria-labelledby="p2">
+            <a class="back" href="#list">← 목록으로</a>
+            <header class="post-head">
+              <span class="badge free">자유</span>
+              <h2 id="p2">양산 일정, 이번엔 지켜질까요?</h2>
+              <p class="post-meta"><span>드라이브</span><span>2026.10.31</span><span>조회 73</span></p>
+            </header>
+            <div class="post-body">
+              <p><a class="inline" href="timeline.html">연혁 페이지</a>를 보니 일정이 여러 번 바뀌었더라고요. 2028년 양산 목표, 다들 어떻게 보세요?</p>
+            </div>
+            <section class="comments" aria-label="댓글 2개">
+              <h3>댓글 <span>2</span></h3>
+              <div class="comment"><p class="c-meta"><strong>로드스터팬</strong><span>10.31</span></p><p>기대는 되지만 공식 발표가 나올 때까지는 지켜봐야 할 것 같아요.</p></div>
+              <div class="comment"><p class="c-meta"><strong>전기차입문</strong><span>10.31</span></p><p>FAQ에도 일정이 바뀔 수 있다고 적혀 있더라고요.</p></div>
+            </section>
+            <nav class="post-nav" aria-label="다른 글"><a href="#post-3">이전 글 · 사양 페이지 보는 법</a></nav>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>비공식 팬 페이지</strong> · 상표와 제품명은 각 소유자에게 있어요. 이 사이트는 어떤 기업과도 제휴, 후원 관계가 아닙니다.</p>
+    <p class="small">정보 기준: 2026년 10월 · 언론 보도 종합 · 자동차 그림은 가상 일러스트 · 공식 영상은 Tesla 유튜브 퍼가기 · 연습용 프로젝트</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
